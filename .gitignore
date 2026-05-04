@@ -1,0 +1,20 @@
+node_modules/
+bun.lockb
+.env
+.env.local
+.env.*.local
+
+# Local SmeStack workspace state
+workspace/business.md
+workspace/messages.db
+workspace/messages.db-journal
+workspace/oauth-tokens.json
+
+# Anthropic
+.anthropic/
+
+# Editor
+.vscode/
+.idea/
+*.swp
+.DS_Store
