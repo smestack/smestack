@@ -26,23 +26,52 @@ If it exists, read every section. Pay special attention to:
 - "The one promise" — the single most important thing
 - "Tools the owner is willing to connect" — your install surface
 
-## Phase 2 — Match to the v0 catalog
+## Phase 2 — Identify the #1 pain, then match (catalog-first, design-fallback)
 
-The v0 SmeStack catalog has 5 implemented skills + 3 stubs. Pick prescriptions ONLY from this list. **Do not invent skills that don't exist.**
+### Step 2a — Identify the #1 pain (always, before anything else)
 
-**Implemented (can actually install in v0):**
-- `email-triage` — connect Gmail, classify inbox, draft replies in the owner's voice. Owner approves each draft before send.
-- `business-doc-bootstrap` — keeps `business.md` updated as new info comes up across other skills. Auto-suggested if the owner mentions evolving business state.
+Before opening the catalog, identify the owner's **single highest-leverage pain** from `business.md`. Sources to check, in order of weight:
+
+1. **The one promise** (single most important thing the owner asked for) — this is usually the bullseye.
+2. **What the owner wishes for** (verbatim quote — gold).
+3. **Where the energy leaks** + **Where the fires start** — when these align with the wish, you have triple-confirmation.
+
+State the #1 pain explicitly to the owner before rendering any cards:
+
+> "Reading your profile back, your #1 pain is **{pain}**. You said: '{verbatim quote}'. Everything I propose has to start there — anything else is a tier-2 pain that doesn't move the needle for you."
+
+### Step 2b — Catalog-first match
+
+Check whether the v0 catalog directly addresses the #1 pain:
+
+**Implemented skills (real installs):**
+- `email-triage` — connect Gmail, classify inbox, draft replies in the owner's voice. Owner approves each draft before send. **Matches pains like:** inbox overwhelm, "I drown in email," reply-time anxiety.
+- `business-doc-bootstrap` — keeps `business.md` updated. Matches pains around evolving business state.
 - `profile-pdf` — exports the business profile as a 1-page PDF. Auto-suggested at intake completion.
-- (gmail-oauth helper) — required by email-triage, prescribed alongside if not yet authenticated
-- (intake itself, already complete by this point)
+- (gmail-oauth helper) — required by email-triage; prescribed alongside if needed.
 
-**Stubbed (show as "coming soon" cards if relevant):**
-- `twilio-voice-agent` — answer calls when the owner is busy. Show this stub if Q5/Q7 mentioned phone calls.
-- `offerte-generator` — Dutch quote/offerte drafting from email threads. Show this stub if pricing model is project-based and tools include email.
-- `accounting-summary` — monthly KPI report from Exact / Moneybird / Yuki. Show this stub if accounting tool is named in profile.
+**Stubbed skills (show as "coming soon" cards if relevant):**
+- `twilio-voice-agent` — answer calls when the owner is busy. Matches: phone-call interruptions, after-hours customer reach.
+- `offerte-generator` — Dutch quote/offerte drafting. Matches: scope-blowout on quotes, slow quote turnaround.
+- `accounting-summary` — monthly KPI report from Exact / Moneybird / Yuki. Matches: VAT visibility, end-of-month cash blind spots.
 
-If the profile mentions tools or pain points outside this catalog, **acknowledge the gap honestly**: "You mentioned X. I don't have a skill for that yet — adding it to the wishlist."
+### Step 2c — The routing decision (this is the important one)
+
+After identifying the #1 pain, route ONE of three ways:
+
+1. **Direct catalog match.** If an *implemented* catalog skill directly solves the #1 pain, render that card FIRST as Prescription #1. Then proceed to render 2-4 supporting cards from the catalog for tier-2 pains. This is the fast lane.
+
+2. **Stub-only catalog match.** If only a *stubbed* skill matches the #1 pain (e.g., `offerte-generator` matches scope-blowout but isn't built), render the stub card explicitly as the #1 prescription with the "COMING SOON" framing. Then ALSO offer to invoke `/smestack-skill-design` right now to design and ship a real version for this owner specifically. Quote: "I can mark this as wishlist, OR I can design a custom version of this skill for your specific situation in the next 15 minutes. Which do you want?"
+
+3. **No catalog match for the #1 pain.** This is the case the v0 prescription-engine used to handle wrong — it would silently pivot to a tier-2 catalog match instead. **Do not do that.** Instead, say it out loud:
+
+   > "Your #1 pain is **{pain}**. The v0 catalog doesn't address it directly. I have two options: (a) hand off to `/smestack-skill-design` now to co-design a custom skill for this specifically — takes about 15-20 minutes, ends with the new skill written and ready to wire up. (b) Render catalog cards for your tier-2 pains while leaving the #1 unaddressed today. Real consultants don't pivot away from the #1 pain — option (a) is what I'd do for you. Which?"
+
+   If owner picks (a): invoke `/smestack-skill-design` by reading `~/.claude/skills/smestack/skill-design/SKILL.md` and following its instructions. Pass forward the identified #1 pain so skill-design doesn't have to re-discover it.
+
+   If owner picks (b): render catalog cards for tier-2 pains AND append the #1 pain to `workspace/business.md` under a `## Wishlist (no skill yet)` section so it's never lost.
+
+If the profile mentions tools or pain points the catalog doesn't cover and they're NOT the #1 pain, acknowledge the gap honestly without pivoting: "You mentioned X. I don't have a catalog skill for that, and it's not your #1 pain — adding it to the wishlist."
 
 ## Phase 3 — Render the cards
 

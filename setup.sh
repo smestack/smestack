@@ -57,6 +57,7 @@ echo "==> Registering skills with Claude Code..."
 register_skill business-intake
 register_skill prescription-engine
 register_skill email-triage
+register_skill skill-design
 echo ""
 
 # 5. Verify .env exists (or remind to create it)
