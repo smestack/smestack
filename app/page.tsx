@@ -1,168 +1,200 @@
+"use client";
+
 import Link from "next/link";
 import { Check } from "lucide-react";
+import { useLocale, t } from "@/lib/i18n";
+import { LocaleToggle } from "@/components/LocaleToggle";
 
 interface Testimonial {
-  quote: string;
+  quote_nl: string;
+  quote_en: string;
+  // First names only — locked per user feedback. Last initials dropped.
   name: string;
-  role: string;
+  role_nl: string;
+  role_en: string;
 }
 
 // Dutch SME testimonials. Editorial layout (single column of blockquotes),
 // NOT a 3-column card grid — locked anti-slop in /plan-design-review.
+// First names only — friendlier, less "case-study formal".
 const testimonials: Testimonial[] = [
   {
-    quote:
+    quote_nl:
       "Ik bespaar 3 uur per week op uren bijhouden, en de jongens vinden het zelf ook prettiger. Nooit meer op zaterdag bonnetjes uitzoeken.",
-    name: "Mark V.",
-    role: "loodgieter, Utrecht",
+    quote_en:
+      "I save 3 hours a week on tracking hours, and the guys themselves prefer it. No more sorting receipts on Saturdays.",
+    name: "Mark",
+    role_nl: "loodgieter, Utrecht",
+    role_en: "plumber, Utrecht",
   },
   {
-    quote:
+    quote_nl:
       "Eindelijk weet ik op maandagochtend wie nog moet betalen, zonder dat ik er zelf in moet duiken. Voelt alsof er een collega meedraait.",
-    name: "Anouk de J.",
-    role: "interieurontwerpster, Den Bosch",
+    quote_en:
+      "I finally know on Monday morning who still needs to pay, without having to dig into it myself. It feels like having an extra colleague.",
+    name: "Anouk",
+    role_nl: "interieurontwerpster, Den Bosch",
+    role_en: "interior designer, Den Bosch",
   },
   {
-    quote:
+    quote_nl:
       "Ik dacht dat ik 'te klein' was voor AI. Bleek dat juist dít past bij een team van vier — en ik beslis nog steeds zelf wat er live gaat.",
-    name: "Rachid B.",
-    role: "glaszetter, Rotterdam",
+    quote_en:
+      "I thought I was 'too small' for AI. Turns out this is exactly the thing that fits a team of four — and I still decide what goes live myself.",
+    name: "Rachid",
+    role_nl: "glaszetter, Rotterdam",
+    role_en: "glazier, Rotterdam",
   },
   {
-    quote:
+    quote_nl:
       "Het mooiste: ze installeren niets zonder dat ik akkoord geef. Dat was de drempel. Nu draait alles soepel en ben ik terug aan de keukentafel om half zes.",
-    name: "Ben H.",
-    role: "elektrotechnisch installateur, Eindhoven",
+    quote_en:
+      "The best part: they install nothing without my approval. That was the threshold for me. Now everything runs smoothly and I'm back at the kitchen table by 5:30.",
+    name: "Ben",
+    role_nl: "elektrotechnisch installateur, Eindhoven",
+    role_en: "electrical engineer, Eindhoven",
   },
-];
-
-// Trust signals — surfaced right above the CTA. Three short claims that
-// answer the "wait, do I have to pay at the end?" cold feet that Jeroen
-// flagged. Each claim is concrete and verifiable, not marketing fluff.
-const trustClaims = [
-  "Volledig gratis",
-  "Geen account, geen creditcard",
-  "Resultaten zijn van jou",
 ];
 
 export default function Home() {
+  const [locale] = useLocale();
+
+  const trustClaims = [
+    t(locale, "landing.trust.free"),
+    t(locale, "landing.trust.no_account"),
+    t(locale, "landing.trust.results_yours"),
+  ];
+
   return (
     <main className="min-h-screen">
+      {/* Top bar with locale toggle */}
+      <div className="px-6 py-4 flex items-center justify-end">
+        <LocaleToggle />
+      </div>
+
       {/* Hero */}
-      <section className="px-6 py-20 sm:py-28">
+      <section className="px-6 py-16 sm:py-24">
         <div className="max-w-prose mx-auto text-center">
           {/* Brand wordmark */}
           <div className="mono text-sm uppercase tracking-wider text-zinc-600 mb-12">
-            MKBStack
+            {t(locale, "brand.name")}
           </div>
 
           <h1 className="text-4xl sm:text-5xl font-semibold leading-tight mb-6">
-            De AI-manager, geïnstalleerd bij jouw bedrijf.
+            {t(locale, "landing.hero.headline")}
           </h1>
 
           <p className="text-lg text-zinc-600 mb-10 leading-relaxed">
-            Een vrijblijvend gesprek van 20 minuten over jouw bedrijf. Daarna
-            concrete, risico-getoetste voorstellen, die jij goedkeurt voordat
-            er iets live gaat.
+            {t(locale, "landing.hero.subhead")}
           </p>
 
-          {/* Trust strip — directly above CTA. Layer 1 of 3 trust signals. */}
+          {/* Trust strip — directly above CTA */}
           <ul className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 mb-8 text-sm text-zinc-800">
             {trustClaims.map((claim, i) => (
               <li key={i} className="flex items-center gap-1.5">
-                <Check
-                  className="w-4 h-4 text-amber-600 flex-shrink-0"
-                  aria-hidden
-                />
+                <Check className="w-4 h-4 text-amber-600 flex-shrink-0" aria-hidden />
                 <span>{claim}</span>
               </li>
             ))}
           </ul>
 
-          {/* Single CTA */}
+          {/* CTA */}
           <Link
             href="/intake"
             className="inline-block min-h-[44px] px-8 py-3 rounded-md font-medium bg-amber-600 text-white hover:bg-amber-700 transition-colors"
           >
-            Start het gesprek
+            {t(locale, "common.start_intake")}
           </Link>
 
-          {/* Layer 2: micro-copy under the CTA. Honest framing — implementation
-              is opt-in paid, but the diagnosis is always free. No pressure. */}
           <p className="mt-6 text-sm text-zinc-600 italic">
-            ~20 minuten. Pauzeer en hervat wanneer je wilt. Geen druk —
-            implementatie is optioneel.
+            {t(locale, "landing.cta.microcopy")}
           </p>
         </div>
       </section>
 
-      {/* Social proof — single line, prose, NOT a stat dashboard */}
-      <section className="px-6 py-8 border-y border-cream-200 bg-white">
+      {/* BIG VISUAL COUNTER — editorial composition, not a dashboard tile.
+          Centered, lots of whitespace, monospace eyebrow, body subtext. */}
+      <section className="px-6 py-24 border-y border-cream-200 bg-white">
         <div className="max-w-prose mx-auto text-center">
-          <p className="text-zinc-800">
-            We hebben in de afgelopen 5 weken al{" "}
-            <span className="font-semibold">meer dan 115 ondernemers</span>{" "}
-            geholpen om hun bedrijfsprocessen te automatiseren.
+          <div className="mono text-xs uppercase tracking-wider text-zinc-600 mb-6">
+            {locale === "nl" ? "ondernemers geholpen" : "entrepreneurs helped"}
+          </div>
+          <div
+            className="font-semibold text-amber-600 leading-none mb-6"
+            style={{ fontSize: "clamp(120px, 22vw, 220px)" }}
+            aria-label={
+              locale === "nl"
+                ? "115 ondernemers geholpen"
+                : "115 entrepreneurs helped"
+            }
+          >
+            115<span className="text-amber-600">+</span>
+          </div>
+          <p className="text-lg text-zinc-800">
+            {locale === "nl"
+              ? "in de afgelopen 5 weken."
+              : "in the last 5 weeks."}
+          </p>
+          <p className="mt-2 text-sm text-zinc-600 italic">
+            {locale === "nl"
+              ? "Hun bedrijfsprocessen draaien nu deels op MKBStack."
+              : "Their business processes now partially run on MKBStack."}
           </p>
         </div>
       </section>
 
-      {/* Layer 3: explicit "wat kost dit?" answer. Anchored at #kosten so
-          the trust-strip above can deep-link if we want to later. */}
+      {/* Wat kost dit? */}
       <section id="kosten" className="px-6 py-16 bg-cream-50">
         <div className="max-w-prose mx-auto">
-          <h2 className="text-2xl font-semibold mb-4">Wat kost dit?</h2>
+          <h2 className="text-2xl font-semibold mb-4">
+            {t(locale, "landing.cost.title")}
+          </h2>
           <p className="text-zinc-800 leading-relaxed mb-4">
-            Niets. Het hele gesprek en alle voorstellen zijn gratis.
+            {t(locale, "landing.cost.p1")}
           </p>
           <p className="text-zinc-800 leading-relaxed mb-4">
-            MKBStack is open source — je draait het op je eigen computer of
-            laptop. Er is geen MKBStack-abonnement, geen account, geen
-            creditcard. Niet bij de start, niet na afloop, nooit.
+            {t(locale, "landing.cost.p2")}
           </p>
           <p className="text-zinc-800 leading-relaxed">
-            Als je een specifieke automatisering daadwerkelijk wilt
-            installeren (bijvoorbeeld een WhatsApp-nummer voor je ploeg, of
-            een AI-model dat draait op de achtergrond), betaal je{" "}
-            <em>rechtstreeks aan die leverancier</em> — bijvoorbeeld Twilio of
-            Anthropic. Vaak is dat een paar tientjes per maand. Of nul: jij
-            beslist of dat de moeite waard is.
+            {t(locale, "landing.cost.p3")}
           </p>
 
           <h3 className="text-base font-semibold mt-8 mb-3">
-            En als ik het zelf niet wil installeren?
+            {t(locale, "landing.cost.diy_title")}
           </h3>
           <p className="text-zinc-800 leading-relaxed">
-            Dan kun je ons inschakelen — wij doen het voor je. Dat is een
-            losse, betaalde dienst die je <em>na</em> het gesprek kunt
-            aanvragen, niet vooraf. Geen abonnement, geen retainer: je krijgt
-            een offerte voor exact die ene automatisering, en jij beslist of
-            je groen licht geeft.
+            {t(locale, "landing.cost.diy_p")}
           </p>
 
           <p className="text-zinc-600 leading-relaxed mt-6 italic text-sm">
-            Geen lock-in. Geen abonnement. Geen verrassingen.
+            {t(locale, "landing.cost.closer")}
           </p>
         </div>
       </section>
 
-      {/* Testimonials — editorial blockquote column, NOT a card grid */}
+      {/* Testimonials — first names only, editorial blockquote column */}
       <section className="px-6 py-16">
         <div className="max-w-prose mx-auto">
-          <h2 className="mono text-xs uppercase tracking-wider text-zinc-600 mb-8 text-center">
-            Wat ondernemers zeggen
+          <h2 className="mono text-xs uppercase tracking-wider text-zinc-600 mb-3 text-center">
+            {t(locale, "landing.testimonials.eyebrow")}
           </h2>
+          {locale === "en" && (
+            <p className="text-xs text-zinc-600 italic text-center mb-8">
+              {t(locale, "landing.testimonials.disclaimer_en_only")}
+            </p>
+          )}
+          {locale === "nl" && <div className="mb-8" />}
 
           <div className="space-y-12">
-            {testimonials.map((t, i) => (
+            {testimonials.map((tt, i) => (
               <blockquote key={i} className="border-l-2 border-amber-600 pl-6">
                 <p className="text-lg text-zinc-800 leading-relaxed mb-3 italic">
-                  &ldquo;{t.quote}&rdquo;
+                  &ldquo;{locale === "nl" ? tt.quote_nl : tt.quote_en}&rdquo;
                 </p>
                 <footer className="text-sm text-zinc-600">
-                  <span className="font-medium text-zinc-800">{t.name}</span>
+                  <span className="font-medium text-zinc-800">{tt.name}</span>
                   <span className="mx-2">·</span>
-                  <span>{t.role}</span>
+                  <span>{locale === "nl" ? tt.role_nl : tt.role_en}</span>
                 </footer>
               </blockquote>
             ))}
@@ -170,34 +202,31 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Closing CTA — repeat after testimonials */}
+      {/* Closing CTA */}
       <section className="px-6 py-16 border-t border-cream-200">
         <div className="max-w-prose mx-auto text-center">
           <p className="text-lg text-zinc-800 mb-6 leading-relaxed">
-            Klaar om jouw eerste voorstel te zien?
+            {t(locale, "landing.closing.q")}
           </p>
           <Link
             href="/intake"
             className="inline-block min-h-[44px] px-8 py-3 rounded-md font-medium bg-amber-600 text-white hover:bg-amber-700 transition-colors"
           >
-            Start het gesprek
+            {t(locale, "common.start_intake")}
           </Link>
           <p className="mt-4 text-sm text-zinc-600 italic">
-            Vrijblijvend. Geen creditcard. Implementatie is optioneel.
+            {t(locale, "landing.closing.microcopy")}
           </p>
         </div>
       </section>
 
       {/* Footer */}
       <footer className="px-6 py-8 text-center text-sm text-zinc-600 border-t border-cream-200">
-        <Link
-          href="/prescriptions"
-          className="underline hover:text-amber-700"
-        >
-          Bekijk huidige voorstellen
+        <Link href="/prescriptions" className="underline hover:text-amber-700">
+          {t(locale, "footer.see_prescriptions")}
         </Link>
         <span className="mx-2">·</span>
-        <span className="mono text-xs">v0.1 — lokale modus</span>
+        <span className="mono text-xs">{t(locale, "footer.version")}</span>
       </footer>
     </main>
   );

@@ -3,6 +3,7 @@
 import { useChat } from "@ai-sdk/react";
 import { useRef, useEffect } from "react";
 import { cn } from "@/lib/utils";
+import { useLocale, t } from "@/lib/i18n";
 
 export interface ChatShellProps {
   skillName: string;
@@ -12,6 +13,7 @@ export interface ChatShellProps {
 }
 
 export function ChatShell({ skillName, initialPrompt, rightRailBullets }: ChatShellProps) {
+  const [locale] = useLocale();
   const { messages, input, handleInputChange, handleSubmit, isLoading } = useChat({
     api: `/api/skill/${skillName}`,
     initialMessages: initialPrompt
@@ -43,7 +45,7 @@ export function ChatShell({ skillName, initialPrompt, rightRailBullets }: ChatSh
           >
             {m.role === "user" && (
               <div className="mono text-xs uppercase tracking-wider text-zinc-600 mb-1">
-                jouw antwoord
+                {t(locale, "common.you_said")}
               </div>
             )}
             {/* Render text-only content. Tool calls are surfaced separately. */}
@@ -62,7 +64,7 @@ export function ChatShell({ skillName, initialPrompt, rightRailBullets }: ChatSh
           <textarea
             value={input}
             onChange={handleInputChange}
-            placeholder="Typ je antwoord…"
+            placeholder={t(locale, "common.input_placeholder")}
             rows={3}
             className="w-full p-4 border border-cream-200 rounded-md bg-white focus:outline-none focus:border-amber-600 transition-colors text-base"
             onKeyDown={(e) => {
@@ -77,7 +79,7 @@ export function ChatShell({ skillName, initialPrompt, rightRailBullets }: ChatSh
             disabled={isLoading || !input.trim()}
             className="mt-3 min-h-[44px] px-6 rounded-md font-medium bg-amber-600 text-white hover:bg-amber-700 disabled:opacity-50"
           >
-            Verder
+            {t(locale, "common.continue")}
           </button>
         </form>
       </div>
@@ -86,7 +88,7 @@ export function ChatShell({ skillName, initialPrompt, rightRailBullets }: ChatSh
       {rightRailBullets && rightRailBullets.length > 0 && (
         <aside className="hidden lg:block bg-cream-50 border border-cream-200 rounded-md p-5 h-fit sticky top-12">
           <h3 className="mono text-xs uppercase tracking-wider text-zinc-600 mb-3">
-            Wat ik tot nu toe over je heb geleerd
+            {t(locale, "common.right_rail_title")}
           </h3>
           <ul className="space-y-2 text-sm text-zinc-800">
             {rightRailBullets.map((b, i) => (
