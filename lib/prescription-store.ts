@@ -19,6 +19,7 @@ import type { PrescriptionPayload } from "@/lib/db";
 const STORAGE_KEY_SESSION = "mkbstack-session-id";
 const STORAGE_KEY_PRESCRIPTIONS = "mkbstack-prescriptions";
 const STORAGE_KEY_MESSAGES = "mkbstack-intake-messages";
+const STORAGE_KEY_PROGRESS = "mkbstack-intake-progress";
 
 export type PrescriptionAction = "approve" | "modify" | "reject" | null;
 
@@ -124,6 +125,54 @@ export function loadMessages(): StoredMessage[] {
 export function saveMessages(messages: StoredMessage[]): void {
   if (!isBrowser()) return;
   localStorage.setItem(STORAGE_KEY_MESSAGES, JSON.stringify(messages));
+}
+
+// ─── Intake wizard progress ──────────────────────────────
+// Populated from the model's mark_progress tool calls. Side panel reads
+// from this; stepper reads currentStep + completedSteps.
+
+export type IntakeFieldKey =
+  | "what_business_does"
+  | "size"
+  | "customers"
+  | "pricing"
+  | "day_shape"
+  | "leak"
+  | "fire"
+  | "tools"
+  | "pretender"
+  | "wish"
+  | "no_go"
+  | "one_promise";
+
+export interface IntakeProgress {
+  currentStep: number; // 1..12
+  completedSteps: number[];
+  fields: Array<{ key: IntakeFieldKey; value: string }>;
+}
+
+export const EMPTY_PROGRESS: IntakeProgress = {
+  currentStep: 1,
+  completedSteps: [],
+  fields: [],
+};
+
+export const INTAKE_STEP_TOTAL = 12;
+
+export function loadProgress(): IntakeProgress {
+  if (!isBrowser()) return EMPTY_PROGRESS;
+  const raw = localStorage.getItem(STORAGE_KEY_PROGRESS);
+  if (!raw) return EMPTY_PROGRESS;
+  try {
+    return JSON.parse(raw) as IntakeProgress;
+  } catch {
+    return EMPTY_PROGRESS;
+  }
+}
+
+export function saveProgress(p: IntakeProgress): void {
+  if (!isBrowser()) return;
+  localStorage.setItem(STORAGE_KEY_PROGRESS, JSON.stringify(p));
 }
 
 // ─── Lead-capture client-side helper. Wraps fetch /api/answers.

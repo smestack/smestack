@@ -52,6 +52,56 @@ export async function POST(
     messages: clientMessages,
     maxTokens: 4096,
     tools: {
+      // Live-progress signal for the wizard UI. The model calls this AFTER
+      // each substantive answer with: which step we're on, and what fields
+      // were learned this turn. Side panel + stepper read from these calls.
+      mark_progress: tool({
+        description:
+          "Call this at the END of every turn during /business-intake (after asking the next question in your prose response). Tells the wizard UI which step we're on and what business-profile fields were learned this turn. The 12 fixed steps map to the 12 questions in the SKILL.md.",
+        parameters: z.object({
+          currentStep: z
+            .number()
+            .min(1)
+            .max(12)
+            .describe(
+              "The step the owner is currently being asked. 1=business_type, 2=size, 3=customers, 4=pricing, 5=day_shape, 6=leak, 7=fire, 8=tools, 9=pretender, 10=wish, 11=no_go, 12=one_promise"
+            ),
+          completedSteps: z
+            .array(z.number().min(1).max(12))
+            .describe(
+              "Step numbers already answered, INCLUDING any smart-skipped ones. Cumulative — always pass the full list."
+            ),
+          fields: z
+            .array(
+              z.object({
+                key: z.enum([
+                  "what_business_does",
+                  "size",
+                  "customers",
+                  "pricing",
+                  "day_shape",
+                  "leak",
+                  "fire",
+                  "tools",
+                  "pretender",
+                  "wish",
+                  "no_go",
+                  "one_promise",
+                ]),
+                value: z
+                  .string()
+                  .describe(
+                    "Short structured value (1-2 sentences max) suitable for a side-panel chip. NOT the full conversation paragraph — just the distilled fact in the owner's voice."
+                  ),
+              })
+            )
+            .describe(
+              "Cumulative — always pass ALL fields known so far, not just the ones learned this turn. The wizard renders the full list in the side panel."
+            ),
+        }),
+        execute: async () => ({ ok: true }),
+      }),
+
       propose_prescription: tool({
         description:
           "Propose a prescription card for the owner to review. Use this when you've identified a specific, narrow, risk-assessed automation worth installing. Each card is shown to the owner one at a time with Approve / Modify / Reject buttons.",

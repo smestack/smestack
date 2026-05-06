@@ -131,6 +131,44 @@ const dict = {
   "nav.proposals": { nl: "Voorstellen", en: "Proposals" },
   "nav.start": { nl: "Start gesprek", en: "Start conversation" },
 
+  // ─── wizard / intake flow ───────────────────────────
+  "wizard.step_of": {
+    nl: (n: number) => `stap ${n} van 12`,
+    en: (n: number) => `step ${n} of 12`,
+  },
+  "wizard.thinking": { nl: "MKBStack denkt na…", en: "MKBStack is thinking…" },
+  "wizard.placeholder": {
+    nl: "Schrijf je antwoord hier. Eén of twee zinnen is genoeg.",
+    en: "Write your answer here. One or two sentences is enough.",
+  },
+  "wizard.continue": { nl: "Verder →", en: "Continue →" },
+  "wizard.pause": { nl: "Pauzeer", en: "Pause" },
+  "wizard.side_title": { nl: "Wat ik weet", en: "What I know" },
+  "wizard.side_empty": {
+    nl: "Nog niets — het vult zich vanzelf terwijl we praten.",
+    en: "Nothing yet — it'll fill in as we talk.",
+  },
+  "wizard.complete_title": {
+    nl: "Klaar — voorstellen worden uitgewerkt",
+    en: "Done — proposals are being prepared",
+  },
+  "wizard.complete_body": {
+    nl: "Je intake is compleet. Zodra de eerste voorstellen klaarstaan, zie je ze rechts.",
+    en: "Your intake is complete. The first proposals will appear shortly.",
+  },
+  "wizard.field.what_business_does": { nl: "Bedrijfstype", en: "Business type" },
+  "wizard.field.size": { nl: "Grootte", en: "Size" },
+  "wizard.field.customers": { nl: "Klanten", en: "Customers" },
+  "wizard.field.pricing": { nl: "Prijsmodel", en: "Pricing model" },
+  "wizard.field.day_shape": { nl: "Dagindeling", en: "Day shape" },
+  "wizard.field.leak": { nl: "De leak", en: "The leak" },
+  "wizard.field.fire": { nl: "De fire", en: "The fire" },
+  "wizard.field.tools": { nl: "Tools", en: "Tools" },
+  "wizard.field.pretender": { nl: "Stille zorg", en: "Quiet worry" },
+  "wizard.field.wish": { nl: "Wens", en: "Wish" },
+  "wizard.field.no_go": { nl: "No-go zones", en: "No-go zones" },
+  "wizard.field.one_promise": { nl: "De ene belofte", en: "The one promise" },
+
   // ─── intake page ────────────────────────────────────
   "intake.opener": {
     nl: "Ik ben MKBStack — laten we ~20 minuten nemen om helder te krijgen wat jouw bedrijf doet. Wat doet jouw bedrijf eigenlijk, in één zin — zoals je het tegen iemand op een borrel zou uitleggen?",
@@ -236,6 +274,33 @@ const dict = {
       `Hoi MKBStack-team,\n\nIk heb het intake-gesprek gedaan en ${n} voorstel${n === 1 ? "" : "len"} goedgekeurd. Ik zou graag een offerte ontvangen voor de installatie.\n\n[Korte beschrijving van mijn bedrijf, indien gewenst]\n\nBel me terug op: [telefoonnummer]\n\nGroeten,\n[naam]`,
     en: (n: number) =>
       `Hi MKBStack team,\n\nI've completed the intake and approved ${n} proposal${n === 1 ? "" : "s"}. I'd like to receive a quote for the installation.\n\n[Short description of my business, if relevant]\n\nCall me back at: [phone number]\n\nRegards,\n[name]`,
+  },
+
+  // ─── customer stories page ──────────────────────────
+  "stories.eyebrow": { nl: "klantverhalen", en: "customer stories" },
+  "stories.title": {
+    nl: "Wat er gebeurt nadat ondernemers groen licht geven",
+    en: "What happens after entrepreneurs give the green light",
+  },
+  "stories.intro": {
+    nl: "Vier MKB-ondernemers, vier verschillende pijnpunten, vier kleine automatiseringen die nu draaien op de achtergrond. Geen enterprise-roll-out, geen consultant-traject — gewoon één concreet probleem per keer.",
+    en: "Four SME entrepreneurs, four different pain points, four small automations now running in the background. No enterprise roll-out, no consultant track — just one concrete problem at a time.",
+  },
+  "stories.disclaimer": {
+    nl: "Deze verhalen zijn samengesteld op basis van echte intake-gesprekken. Namen en specifieke cijfers zijn versluierd of representatief gemaakt.",
+    en: "These stories are composed from real intake conversations. Names and specific numbers are obscured or made representative.",
+  },
+  "stories.section.situation": { nl: "De situatie", en: "The situation" },
+  "stories.section.built": { nl: "Wat we hebben gebouwd", en: "What we built" },
+  "stories.section.result": { nl: "Het resultaat", en: "The outcome" },
+  "stories.numbers.label": { nl: "in cijfers", en: "by the numbers" },
+  "stories.cta.headline": {
+    nl: "Wat zou jouw verhaal zijn?",
+    en: "What would your story be?",
+  },
+  "stories.cta.body": {
+    nl: "Het intake-gesprek is waar het begint. ~20 minuten, vrijblijvend, geen creditcard.",
+    en: "The intake conversation is where it starts. ~20 minutes, no strings, no credit card.",
   },
 
   // ─── locale toggle ──────────────────────────────────

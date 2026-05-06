@@ -67,8 +67,14 @@ export default function Home() {
 
   return (
     <main className="min-h-screen">
-      {/* Top bar with locale toggle */}
-      <div className="px-6 py-4 flex items-center justify-end">
+      {/* Top bar with locale toggle + nav */}
+      <div className="px-6 py-4 flex items-center justify-end gap-4">
+        <Link
+          href="/klantverhalen"
+          className="mono text-xs uppercase tracking-wider text-zinc-600 hover:text-amber-700"
+        >
+          {t(locale, "nav.stories")}
+        </Link>
         <LocaleToggle />
       </div>
 
@@ -222,6 +228,10 @@ export default function Home() {
 
       {/* Footer */}
       <footer className="px-6 py-8 text-center text-sm text-zinc-600 border-t border-cream-200">
+        <Link href="/klantverhalen" className="underline hover:text-amber-700">
+          {t(locale, "footer.see_stories")}
+        </Link>
+        <span className="mx-2">·</span>
         <Link href="/voorstellen" className="underline hover:text-amber-700">
           {t(locale, "footer.see_prescriptions")}
         </Link>

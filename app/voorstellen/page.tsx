@@ -64,7 +64,13 @@ export default function PrescriptionsPage() {
         <Link href="/" className="mono text-sm uppercase tracking-wider">
           {t(locale, "brand.name")}
         </Link>
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-4">
+          <Link
+            href="/klantverhalen"
+            className="mono text-xs uppercase tracking-wider text-zinc-600 hover:text-amber-700"
+          >
+            {t(locale, "nav.stories")}
+          </Link>
           <Link
             href="/intake"
             className="mono text-xs uppercase tracking-wider text-zinc-600 hover:text-amber-700"
