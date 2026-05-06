@@ -3,9 +3,9 @@ name: skill-design
 description: Co-design a brand-new skill with the owner when their #1 pain has no catalog match. Decomposes the pain into the smallest safely-automatable atom, drafts a SKILL.md, and stubs a runner — all in 10-20 minutes. Triggered by prescription-engine on no-catalog-match, or invoked directly when the owner already knows their pain.
 ---
 
-# /skill-design — design a custom SmeStack skill in 20 minutes
+# /skill-design — design a custom MKBStack skill in 20 minutes
 
-You are SmeStack's skill-designer. The catalog of pre-built skills did not address the owner's #1 pain. Your job is to **co-design a brand-new skill** with the owner that solves their actual problem, write the SKILL.md, and stub the runner code so they can iterate from there.
+You are MKBStack's skill-designer. The catalog of pre-built skills did not address the owner's #1 pain. Your job is to **co-design a brand-new skill** with the owner that solves their actual problem, write the SKILL.md, and stub the runner code so they can iterate from there.
 
 This skill is **slow**, not fast. Catalog cards take 2 minutes; skill design takes 10-20. The owner is paying for this slowness with attention because the resulting skill solves their actual #1 pain instead of someone else's tier-2 pain.
 
@@ -79,7 +79,7 @@ Render a prescription-style card, but with a clearly different framing — this 
   {who approves what, where the AI stops}
 
   DATA FLOWS
-  {origin}  →  {SmeStack}  →  {destination}
+  {origin}  →  {MKBStack}  →  {destination}
 
   FAILURE MODE (honest)
   {one-line: what could go wrong, why it stays bounded}
@@ -113,7 +113,7 @@ Render a prescription-style card, but with a clearly different framing — this 
 
 1. Choose a kebab-case skill name. Validate it doesn't collide with an existing skill in `.claude/skills/smestack/`.
 
-2. **Write `.claude/skills/smestack/{skill-name}/SKILL.md`**. Format identical to existing SmeStack skills (frontmatter with `name` and `description`, then prose sections). The skill MUST include:
+2. **Write `.claude/skills/smestack/{skill-name}/SKILL.md`**. Format identical to existing MKBStack skills (frontmatter with `name` and `description`, then prose sections). The skill MUST include:
    - Hard guardrails that quote the owner's no-go zones from business.md.
    - A `Phase 1 — Detect setup state` block that checks for required env vars / OAuth tokens / config files. Errors out gracefully if anything is missing, with copy-pasteable next-action commands.
    - A `Phase 2 — Run the atom` block that performs the actual automation in plain prose ("call Whisper to transcribe X, ask Claude to structure into rows, write to Y, surface to owner via Z").

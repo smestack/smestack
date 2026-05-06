@@ -138,6 +138,17 @@ export interface PrescriptionPayload {
   effort: "S" | "M" | "L" | "COMING_SOON";
   isStub?: boolean;
   isCustomDesign?: boolean;
+  /**
+   * What the owner needs to do/provide for this to actually run in real life.
+   * Surfaced inline on the prescription card after approve.
+   * 2-5 short concrete bullets, not a wall of text.
+   * Examples:
+   *   "Set up a Twilio sandbox WhatsApp number (~10 min)"
+   *   "Paste your Moneybird API token in .env"
+   *   "Add your three plumbers' phone numbers to workspace/roster.json"
+   * Optional — older prescriptions persisted without this field.
+   */
+  nextSteps?: string[];
 }
 
 export function createPrescription(skillRunId: string, payload: PrescriptionPayload): string {

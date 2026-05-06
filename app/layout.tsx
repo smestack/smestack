@@ -15,8 +15,8 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "SmeStack",
-  description: "The AI manager, installed at SMEs.",
+  title: "MKBStack",
+  description: "De AI-manager, geïnstalleerd bij jouw bedrijf.",
 };
 
 export default function RootLayout({
@@ -25,7 +25,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={`${inter.variable} ${jetbrainsMono.variable}`}>
+    <html lang="nl" className={`${inter.variable} ${jetbrainsMono.variable}`}>
       <body className="min-h-screen">{children}</body>
     </html>
   );

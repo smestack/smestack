@@ -15,6 +15,8 @@ export interface PrescriptionCardProps {
   effort: "S" | "M" | "L" | "COMING_SOON";
   isStub?: boolean;
   isCustomDesign?: boolean;
+  /** What the owner needs to do/provide for this to actually run. Surfaced after approve. */
+  nextSteps?: string[];
   status?: string;
   onAction?: (action: "approve" | "modify" | "reject", payload?: string) => Promise<void> | void;
 }
@@ -41,8 +43,8 @@ export function PrescriptionCard(props: PrescriptionCardProps) {
       {/* Title row */}
       <div className="flex items-baseline justify-between gap-4 mb-2">
         <span className="mono text-xs uppercase tracking-wider text-zinc-600">
-          {props.isCustomDesign ? "skill design proposal" : "prescription"}
-          {isComingSoon ? " — coming soon" : ""}
+          {props.isCustomDesign ? "voorstel op maat" : "voorstel"}
+          {isComingSoon ? " — binnenkort" : ""}
         </span>
         <span className="mono text-xs text-zinc-600">
           {props.proposedSkillName}
@@ -53,9 +55,9 @@ export function PrescriptionCard(props: PrescriptionCardProps) {
         {props.headline}
       </h2>
 
-      {/* What gets automated */}
+      {/* Wat wordt geautomatiseerd */}
       <h3 className="mono text-xs uppercase tracking-wider text-zinc-600 mb-2">
-        What gets automated
+        Wat wordt geautomatiseerd
       </h3>
       <ul className="space-y-1.5 mb-6 text-zinc-800">
         {props.whatGetsAutomated.map((bullet, i) => (
@@ -68,27 +70,27 @@ export function PrescriptionCard(props: PrescriptionCardProps) {
 
       {/* Data flow */}
       <h3 className="mono text-xs uppercase tracking-wider text-zinc-600 mb-2">
-        Data flow
+        Data­stroom
       </h3>
       <div className="flex items-center gap-2 mb-6 flex-wrap">
         <span className="flow-chip">{props.dataFlow.origin}</span>
         <ArrowRight className="w-4 h-4 text-zinc-600" aria-hidden />
-        <span className="flow-chip">SmeStack</span>
+        <span className="flow-chip">MKBStack</span>
         <ArrowRight className="w-4 h-4 text-zinc-600" aria-hidden />
         <span className="flow-chip">{props.dataFlow.destination}</span>
       </div>
 
-      {/* Risk callout */}
+      {/* Risico callout */}
       <div className="risk-callout">
         <div className="mono text-xs uppercase tracking-wider text-amber-700 mb-1">
-          risk
+          risico
         </div>
         <p className="text-sm text-zinc-800">{props.whatCouldGoWrong}</p>
       </div>
 
       {/* Why this, for you */}
       <h3 className="mono text-xs uppercase tracking-wider text-zinc-600 mb-2 mt-6">
-        Why this, for you
+        Waarom dit, voor jou
       </h3>
       <p className="text-sm text-zinc-600 italic mb-6">{props.whyForYou}</p>
 
@@ -99,7 +101,7 @@ export function PrescriptionCard(props: PrescriptionCardProps) {
             type="button"
             onClick={() => handle("approve")}
             disabled={busy || !!done}
-            aria-label={`Approve ${props.proposedSkillName} prescription`}
+            aria-label={`Goedkeuren ${props.proposedSkillName}`}
             className={cn(
               "min-h-[44px] px-6 rounded-md font-medium transition-colors",
               "bg-amber-600 text-white hover:bg-amber-700",
@@ -107,26 +109,26 @@ export function PrescriptionCard(props: PrescriptionCardProps) {
               done === "approve" && "bg-amber-700"
             )}
           >
-            {done === "approve" ? "Approved" : busy ? "..." : "Approve"}
+            {done === "approve" ? "Goedgekeurd" : busy ? "..." : "Goedkeuren"}
           </button>
           <button
             type="button"
             onClick={() => handle("modify")}
             disabled={busy || !!done}
-            aria-label={`Modify ${props.proposedSkillName} prescription`}
+            aria-label={`Aanpassen ${props.proposedSkillName}`}
             className={cn(
               "min-h-[44px] px-6 rounded-md font-medium transition-colors",
               "border border-cream-200 hover:bg-cream-50",
               "disabled:opacity-50 disabled:cursor-not-allowed"
             )}
           >
-            Modify
+            Aanpassen
           </button>
           <button
             type="button"
             onClick={() => handle("reject")}
             disabled={busy || !!done}
-            aria-label={`Reject ${props.proposedSkillName} prescription`}
+            aria-label={`Afwijzen ${props.proposedSkillName}`}
             className={cn(
               "min-h-[44px] px-6 rounded-md font-medium transition-colors",
               "border border-cream-200 hover:bg-cream-50 text-zinc-600",
@@ -134,22 +136,51 @@ export function PrescriptionCard(props: PrescriptionCardProps) {
               done === "reject" && "border-zinc-400"
             )}
           >
-            {done === "reject" ? "Rejected" : "Reject"}
+            {done === "reject" ? "Afgewezen" : "Afwijzen"}
           </button>
         </div>
       )}
 
       {isComingSoon && (
         <div className="text-sm text-zinc-600 italic">
-          On the v0.5 roadmap. Run /smestack-prescription-engine again when it ships.
+          Op de v0.5 roadmap. Voer /mkbstack-prescription-engine opnieuw uit als deze beschikbaar is.
         </div>
       )}
 
-      {done && (
+      {done === "approve" && props.nextSteps && props.nextSteps.length > 0 && (
+        <div className="mt-6 pt-6 border-t border-cream-200">
+          <h3 className="mono text-xs uppercase tracking-wider text-amber-700 mb-3">
+            Volgende stappen
+          </h3>
+          <ul className="space-y-2 text-sm text-zinc-800">
+            {props.nextSteps.map((step, i) => (
+              <li key={i} className="flex gap-2">
+                <span className="mono text-amber-600 select-none">{i + 1}.</span>
+                <span>{step}</span>
+              </li>
+            ))}
+          </ul>
+          <p className="mt-4 text-xs text-zinc-600 italic">
+            Pak ze in je eigen tempo op. Niets gaat live tot jij groen licht geeft.
+          </p>
+        </div>
+      )}
+
+      {done === "approve" && (!props.nextSteps || props.nextSteps.length === 0) && (
         <div className="mt-4 text-xs text-zinc-600 mono">
-          {done === "approve" && `→ approved. Next steps shown below.`}
-          {done === "modify" && `→ modify mode. Tell the chat what to change.`}
-          {done === "reject" && `→ rejected. Won't reappear unless you ask.`}
+          → goedgekeurd. (Volgende stappen worden getoond zodra ze beschikbaar zijn.)
+        </div>
+      )}
+
+      {done === "modify" && (
+        <div className="mt-4 text-xs text-zinc-600 mono">
+          → wijzig-modus. Vertel in de chat wat er moet veranderen.
+        </div>
+      )}
+
+      {done === "reject" && (
+        <div className="mt-4 text-xs text-zinc-600 mono">
+          → afgewezen. Komt niet terug tenzij je het vraagt.
         </div>
       )}
     </article>

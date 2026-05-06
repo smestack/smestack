@@ -123,6 +123,13 @@ export async function POST(
             .boolean()
             .optional()
             .describe("True if this is a custom skill being designed via skill-design."),
+          nextSteps: z
+            .array(z.string())
+            .min(2)
+            .max(5)
+            .describe(
+              "2-5 short concrete bullets describing what the owner needs to do/provide for this to actually run in real life — credentials to obtain, accounts to set up, files to create, decisions to make. Specific to this owner's tools (e.g., 'Get a Moneybird API token from Settings > Integrations'). Surfaced on the card after approve. NOT optional — every prescription must include this so the owner has a clear next move after clicking Approve."
+            ),
         }),
         execute: async (input) => {
           const id = createPrescription(skillRunId, input);

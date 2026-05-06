@@ -44,40 +44,40 @@ export default function PrescriptionsPage() {
     <main className="min-h-screen">
       <header className="border-b border-cream-200 px-6 py-4 flex items-center justify-between">
         <Link href="/" className="mono text-sm uppercase tracking-wider">
-          SmeStack
+          MKBStack
         </Link>
         <Link
           href="/intake"
           className="mono text-xs uppercase tracking-wider text-zinc-600 hover:text-amber-700"
         >
-          ← Intake
+          ← Gesprek
         </Link>
       </header>
 
       <div className="max-w-prose mx-auto px-6 py-12">
         <div className="mono text-xs uppercase tracking-wider text-zinc-600 mb-2">
-          your prescriptions
+          jouw voorstellen
         </div>
-        <h1 className="text-3xl font-semibold mb-6">What I'd recommend</h1>
+        <h1 className="text-3xl font-semibold mb-6">Wat ik je zou aanraden</h1>
         <p className="text-zinc-600 mb-8 leading-relaxed">
-          Each card is one specific automation I've thought through for your
-          business. Approve to install, modify if you want a tweak, or reject
-          if it's not right. I'll never install anything without your one-tap
-          approval.
+          Elk kaartje is één specifieke automatisering die ik voor jouw bedrijf heb
+          uitgedacht. Goedkeuren om te installeren, aanpassen als je iets wilt
+          tweaken, of afwijzen als het niet klopt. Ik installeer nooit iets zonder
+          jouw expliciete goedkeuring.
         </p>
 
-        {loading && <p className="text-zinc-600">Loading…</p>}
+        {loading && <p className="text-zinc-600">Laden…</p>}
 
         {!loading && prescriptions.length === 0 && (
           <div className="border border-cream-200 rounded-md p-8 text-center">
             <p className="text-zinc-600 mb-4">
-              No prescriptions yet. Run through the intake first.
+              Nog geen voorstellen. Doe eerst het intake-gesprek.
             </p>
             <Link
               href="/intake"
               className="inline-block min-h-[44px] px-6 py-3 rounded-md font-medium bg-amber-600 text-white hover:bg-amber-700"
             >
-              Start the intake
+              Start het gesprek
             </Link>
           </div>
         )}

@@ -92,7 +92,7 @@ Render 3-5 prescription cards, ONE AT A TIME. After each card, the owner approve
   • {bullet 3}
 
   DATA FLOWS
-  {origin}  →  {SmeStack}  →  {destination}
+  {origin}  →  {MKBStack}  →  {destination}
 
   WHAT COULD GO WRONG
   {one-line honest risk in plain English. Examples:

@@ -2,24 +2,23 @@ import { ChatShell } from "@/components/ChatShell";
 import Link from "next/link";
 
 export default function IntakePage() {
-  // The opening line is set up to match the SKILL.md tone — terse, warm,
-  // sets up that this is a senior consultant, not a chatbot.
+  // Opener matches the SKILL.md tone — terse, warm, sets up that this is a
+  // senior consultant, not a chatbot. Dutch.
   const opener =
-    "I'm SmeStack — let's spend ~20 minutes getting clear on your business. " +
-    "What does your business actually do, in one sentence — the way you'd " +
-    "describe it to a stranger at a borrel?";
+    "Ik ben MKBStack — laten we ~20 minuten nemen om helder te krijgen wat jouw bedrijf doet. " +
+    "Wat doet jouw bedrijf eigenlijk, in één zin — zoals je het tegen iemand op een borrel zou uitleggen?";
 
   return (
     <main className="min-h-screen">
       <header className="border-b border-cream-200 px-6 py-4 flex items-center justify-between">
         <Link href="/" className="mono text-sm uppercase tracking-wider">
-          SmeStack
+          MKBStack
         </Link>
         <Link
           href="/prescriptions"
           className="mono text-xs uppercase tracking-wider text-zinc-600 hover:text-amber-700"
         >
-          Prescriptions →
+          Voorstellen →
         </Link>
       </header>
 
@@ -34,7 +33,7 @@ export default function IntakePage() {
           href="/"
           className="text-sm text-zinc-600 underline hover:text-amber-700"
         >
-          Pause and resume later
+          Pauzeer en hervat later
         </Link>
       </div>
     </main>

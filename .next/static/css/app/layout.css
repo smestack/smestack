@@ -724,6 +724,10 @@ video {
   margin-top: 2rem;
   margin-bottom: 2rem;
 }
+.mx-2 {
+  margin-left: 0.5rem;
+  margin-right: 0.5rem;
+}
 .mb-1 {
   margin-bottom: 0.25rem;
 }
@@ -757,11 +761,17 @@ video {
 .mt-6 {
   margin-top: 1.5rem;
 }
+.mb-10 {
+  margin-bottom: 2.5rem;
+}
 .block {
   display: block;
 }
 .inline-block {
   display: inline-block;
+}
+.inline {
+  display: inline;
 }
 .flex {
   display: flex;
@@ -800,6 +810,9 @@ video {
 .max-w-prose {
   max-width: 640px;
 }
+.flex-shrink-0 {
+  flex-shrink: 0;
+}
 .select-none {
   -webkit-user-select: none;
      -moz-user-select: none;
@@ -835,6 +848,16 @@ video {
 .gap-4 {
   gap: 1rem;
 }
+.gap-1\.5 {
+  gap: 0.375rem;
+}
+.gap-x-6 {
+  -moz-column-gap: 1.5rem;
+       column-gap: 1.5rem;
+}
+.gap-y-2 {
+  row-gap: 0.5rem;
+}
 .space-y-1\.5 > :not([hidden]) ~ :not([hidden]) {
   --tw-space-y-reverse: 0;
   margin-top: calc(0.375rem * calc(1 - var(--tw-space-y-reverse)));
@@ -845,14 +868,29 @@ video {
   margin-top: calc(0.5rem * calc(1 - var(--tw-space-y-reverse)));
   margin-bottom: calc(0.5rem * var(--tw-space-y-reverse));
 }
+.space-y-12 > :not([hidden]) ~ :not([hidden]) {
+  --tw-space-y-reverse: 0;
+  margin-top: calc(3rem * calc(1 - var(--tw-space-y-reverse)));
+  margin-bottom: calc(3rem * var(--tw-space-y-reverse));
+}
 .rounded-md {
   border-radius: 0.375rem;
 }
 .border {
   border-width: 1px;
 }
+.border-y {
+  border-top-width: 1px;
+  border-bottom-width: 1px;
+}
 .border-b {
   border-bottom-width: 1px;
+}
+.border-t {
+  border-top-width: 1px;
+}
+.border-l-2 {
+  border-left-width: 2px;
 }
 .border-cream-200 {
   --tw-border-opacity: 1;
@@ -861,6 +899,10 @@ video {
 .border-zinc-400 {
   --tw-border-opacity: 1;
   border-color: rgb(161 161 170 / var(--tw-border-opacity, 1));
+}
+.border-amber-600 {
+  --tw-border-opacity: 1;
+  border-color: rgb(217 119 6 / var(--tw-border-opacity, 1));
 }
 .bg-amber-600 {
   --tw-bg-opacity: 1;
@@ -911,8 +953,22 @@ video {
   padding-top: 1rem;
   padding-bottom: 1rem;
 }
+.py-20 {
+  padding-top: 5rem;
+  padding-bottom: 5rem;
+}
+.py-8 {
+  padding-top: 2rem;
+  padding-bottom: 2rem;
+}
 .pb-8 {
   padding-bottom: 2rem;
+}
+.pt-6 {
+  padding-top: 1.5rem;
+}
+.pl-6 {
+  padding-left: 1.5rem;
 }
 .text-center {
   text-align: center;
@@ -1041,6 +1097,11 @@ video {
 
   .sm\:gap-2 {
     gap: 0.5rem;
+  }
+
+  .sm\:py-28 {
+    padding-top: 7rem;
+    padding-bottom: 7rem;
   }
 
   .sm\:text-5xl {
