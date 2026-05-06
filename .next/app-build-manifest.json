@@ -25,6 +25,11 @@
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
       "static/chunks/app/api/prescriptions/route.js"
+    ],
+    "/api/skill/[name]/route": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/api/skill/[name]/route.js"
     ]
   }
 }

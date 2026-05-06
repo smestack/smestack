@@ -1,6 +1,7 @@
 {
   "/api/prescriptions/route": "app/api/prescriptions/route.js",
+  "/api/skill/[name]/route": "app/api/skill/[name]/route.js",
   "/page": "app/page.js",
-  "/intake/page": "app/intake/page.js",
-  "/prescriptions/page": "app/prescriptions/page.js"
+  "/prescriptions/page": "app/prescriptions/page.js",
+  "/intake/page": "app/intake/page.js"
 }

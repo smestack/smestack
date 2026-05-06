@@ -62,23 +62,28 @@ export async function POST(
   }
   const businessMd = loadBusinessMd();
 
-  const systemBlocks = [
-    {
-      type: "text" as const,
-      text: `${skillPrompt}\n\n## Current business profile (workspace/business.md)\n\n${businessMd}`,
-      // cache_control: ephemeral on the static prefix, BYOK only.
-      // Under Claude Code OAuth subscription, the per-token discount doesn't pass through.
-      ...(isBYOK() ? { providerOptions: { anthropic: { cacheControl: { type: "ephemeral" } } } } : {}),
-    },
-  ];
+  // System prompt = SKILL.md prose + current business profile.
+  const systemPrompt = `${skillPrompt}\n\n## Current business profile (workspace/business.md)\n\n${businessMd}`;
+
+  // TODO(v0.5): re-enable Anthropic prompt caching on the static prefix.
+  // AI SDK 4.x expects system as a string (not the [{text, cache_control}] block
+  // shape that the raw Anthropic SDK accepts). To get the 90% cached-read
+  // discount in this setup, switch to providerOptions.anthropic.cacheControl
+  // on a CoreMessage, or pin the static prefix into a leading user message.
+  // Documented in CEO plan as a v0.5 cost optimization. Skipped for v0.
+  void isBYOK;
 
   // Reload full message history from SQLite (server-side state — eng-review locked).
   const stored = loadMessages(skillRunId);
 
+  // Model: configurable via ANTHROPIC_MODEL env var. Default Haiku 4.5
+  // (cheaper + faster + good enough for the consultant intake voice).
+  const modelId = process.env.ANTHROPIC_MODEL ?? "claude-haiku-4-5-20251001";
+
   // Stream the model response.
   const result = streamText({
-    model: anthropic("claude-sonnet-4-5-20250929"),
-    system: systemBlocks as any,
+    model: anthropic(modelId),
+    system: systemPrompt,
     messages: stored.map((m) => ({ role: m.role as any, content: m.content })),
     maxTokens: 4096,
     tools: {
