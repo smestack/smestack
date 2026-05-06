@@ -18,3 +18,10 @@ workspace/oauth-tokens.json
 .idea/
 *.swp
 .DS_Store
+
+# Vercel local link
+.vercel/
+
+# Lead capture local fallback (workspace/ already gitignored, this is explicit)
+workspace/leads.jsonl
+

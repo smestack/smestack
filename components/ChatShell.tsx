@@ -2,8 +2,16 @@
 
 import { useChat } from "@ai-sdk/react";
 import { useRef, useEffect } from "react";
+import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { useLocale, t } from "@/lib/i18n";
+import {
+  loadMessages as loadStoredMessages,
+  saveMessages,
+  upsertPrescription,
+  captureLeadEvent,
+} from "@/lib/prescription-store";
+import type { PrescriptionPayload } from "@/lib/db";
 
 export interface ChatShellProps {
   skillName: string;
@@ -14,11 +22,20 @@ export interface ChatShellProps {
 
 export function ChatShell({ skillName, initialPrompt, rightRailBullets }: ChatShellProps) {
   const [locale] = useLocale();
+
+  // Load any persisted messages from a previous session (resumability).
+  // Falls back to the initialPrompt if there's nothing stored.
+  const stored = typeof window !== "undefined" ? loadStoredMessages() : [];
+  const initialMessages =
+    stored.length > 0
+      ? (stored as any)
+      : initialPrompt
+      ? [{ id: "init", role: "assistant" as const, content: initialPrompt }]
+      : [];
+
   const { messages, input, handleInputChange, handleSubmit, isLoading } = useChat({
     api: `/api/skill/${skillName}`,
-    initialMessages: initialPrompt
-      ? [{ id: "init", role: "assistant" as const, content: initialPrompt }]
-      : [],
+    initialMessages,
     onError: (err) => {
       console.error("Chat error:", err);
     },
@@ -26,15 +43,88 @@ export function ChatShell({ skillName, initialPrompt, rightRailBullets }: ChatSh
 
   const endRef = useRef<HTMLDivElement>(null);
 
+  // Auto-scroll to latest message
   useEffect(() => {
     endRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
+
+  // Persist message history to localStorage on every update — enables refresh
+  // without losing the conversation.
+  useEffect(() => {
+    if (messages.length > 0) {
+      saveMessages(
+        messages.map((m) => ({
+          id: m.id,
+          role: m.role as any,
+          content: typeof m.content === "string" ? m.content : "",
+          toolCalls: (m as any).toolInvocations,
+        }))
+      );
+    }
+  }, [messages]);
+
+  // Extract propose_prescription tool calls into the client prescription
+  // store. Each tool invocation becomes a card that /prescriptions renders.
+  useEffect(() => {
+    for (const m of messages) {
+      const invocations = (m as any).toolInvocations as
+        | Array<{
+            toolCallId: string;
+            toolName: string;
+            args: PrescriptionPayload;
+          }>
+        | undefined;
+      if (!invocations) continue;
+      for (const inv of invocations) {
+        if (inv.toolName !== "propose_prescription") continue;
+        upsertPrescription({
+          ...inv.args,
+          id: inv.toolCallId,
+          status: "pending",
+          createdAt: new Date().toISOString(),
+        } as any);
+      }
+    }
+  }, [messages]);
+
+  // When the model says the intake is complete, fire a lead-capture event.
+  // Heuristic: the model emitted a propose_prescription tool call AND
+  // hasn't done so before in this useChat instance. (More reliable detection
+  // would require the model to emit a dedicated 'intake_complete' tool —
+  // worth adding to SKILL.md in v0.6.)
+  const captureFiredRef = useRef(false);
+  useEffect(() => {
+    if (captureFiredRef.current) return;
+    const hasProposal = messages.some((m: any) =>
+      (m.toolInvocations ?? []).some(
+        (i: { toolName: string }) => i.toolName === "propose_prescription"
+      )
+    );
+    if (hasProposal) {
+      captureFiredRef.current = true;
+      captureLeadEvent({
+        event: "intake_complete",
+        conversation: messages.map((m) => ({
+          role: m.role,
+          content: typeof m.content === "string" ? m.content : "",
+        })),
+        meta: { locale, skillName },
+      });
+    }
+  }, [messages, locale, skillName]);
+
+  // Has the model proposed at least one prescription? Surface a link so the
+  // user knows where to look.
+  const hasPrescriptions = messages.some((m: any) =>
+    (m.toolInvocations ?? []).some(
+      (i: { toolName: string }) => i.toolName === "propose_prescription"
+    )
+  );
 
   return (
     <div className="grid lg:grid-cols-[1fr_280px] gap-12 max-w-5xl mx-auto px-6 py-12">
       {/* Conversation column */}
       <div className="max-w-prose">
-        {/* The AI's messages render as PROSE, not chat bubbles — locked in mockup. */}
         {messages.map((m) => (
           <div
             key={m.id}
@@ -48,14 +138,30 @@ export function ChatShell({ skillName, initialPrompt, rightRailBullets }: ChatSh
                 {t(locale, "common.you_said")}
               </div>
             )}
-            {/* Render text-only content. Tool calls are surfaced separately. */}
             {typeof m.content === "string" ? m.content : ""}
           </div>
         ))}
 
-        {isLoading && (
-          <div className="text-sm text-zinc-600">…</div>
+        {/* When prescriptions exist, show a soft inline pointer to /prescriptions. */}
+        {hasPrescriptions && (
+          <div className="mb-8 p-4 border border-amber-200 bg-amber-50 rounded-md text-sm">
+            <p className="text-zinc-800 mb-2">
+              {locale === "nl"
+                ? "Ik heb concrete voorstellen voor je klaargezet."
+                : "I've prepared some concrete proposals for you."}
+            </p>
+            <Link
+              href="/prescriptions"
+              className="text-amber-700 underline hover:text-amber-800"
+            >
+              {locale === "nl"
+                ? "Bekijk de voorstellen →"
+                : "View the proposals →"}
+            </Link>
+          </div>
         )}
+
+        {isLoading && <div className="text-sm text-zinc-600">…</div>}
 
         <div ref={endRef} />
 

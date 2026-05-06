@@ -1,38 +1,30 @@
 /**
- * /api/skill/[name] — the generic skill execution endpoint.
+ * /api/skill/[name] — pure stream proxy to Anthropic.
  *
- * Used by the chat shell on /intake and /prescriptions. Vercel AI SDK's
- * useChat hook on the client streams text from this endpoint.
+ * Vercel-compatible. No server-side state. No SQLite. The conversation
+ * history comes from useChat in the request body — that IS the source of
+ * truth for messages. The server does only three things:
  *
- * Eng-review locked architecture:
- *   - Loads SKILL.md (the prose system prompt)
- *   - Loads business.md (full profile in v0; per-skill manifest in v0.5+)
- *   - Loads conversation history from SQLite (server-side state model)
- *   - cache_control on the static prefix when on BYOK path (90% read discount)
- *   - Persists every assistant + user turn to SQLite
- *   - Tool: propose_prescription — emits a card the client renders
+ *   1. Load the SKILL.md from disk (read-only, no per-tenant data)
+ *   2. Stream a Claude completion via Vercel AI SDK
+ *   3. Surface tool calls (propose_prescription) so the client can render
+ *      them inline
+ *
+ * Lead-capture (the answers themselves) lives in /api/answers, not here.
+ *
+ * Auth: BYOK on local (ANTHROPIC_API_KEY in .env). On Vercel, set
+ * ANTHROPIC_API_KEY in the project env vars — that's MKBStack-paid for all
+ * visitors. Cost surface ~$0.50 per intake at Haiku 4.5 BYOK rates.
  */
 
 import { anthropic } from "@ai-sdk/anthropic";
 import { streamText, tool } from "ai";
 import { z } from "zod";
 import { NextRequest } from "next/server";
-import {
-  appendMessage,
-  createPrescription,
-  getOrCreateSkillRun,
-  loadMessages,
-} from "@/lib/db";
-import { loadBusinessMd, loadSkill } from "@/lib/skills";
+import { loadSkill } from "@/lib/skills";
 
 export const runtime = "nodejs";
 export const maxDuration = 120;
-
-// Auth path detection: BYOK if ANTHROPIC_API_KEY is in env, else assume CC OAuth.
-// Eng-review locked: enable cache_control ONLY on BYOK path.
-function isBYOK(): boolean {
-  return Boolean(process.env.ANTHROPIC_API_KEY);
-}
 
 export async function POST(
   req: NextRequest,
@@ -41,50 +33,23 @@ export async function POST(
   const { name } = await params;
   const { messages: clientMessages } = await req.json();
 
-  // Get the latest user message from the client; the rest we have in SQLite.
-  const userMsg = clientMessages.findLast((m: any) => m.role === "user");
-  if (!userMsg) {
-    return new Response("No user message in request", { status: 400 });
+  if (!Array.isArray(clientMessages) || clientMessages.length === 0) {
+    return new Response("messages array required", { status: 400 });
   }
 
-  // Load (or create) the active skill run for this skill.
-  const skillRunId = getOrCreateSkillRun(name);
-
-  // Persist the new user turn.
-  appendMessage(skillRunId, "user", userMsg.content);
-
-  // Build the static prefix that gets cache_control on BYOK.
   let skillPrompt: string;
   try {
     skillPrompt = loadSkill(name);
-  } catch (err: any) {
+  } catch {
     return new Response(`Skill not found: ${name}`, { status: 404 });
   }
-  const businessMd = loadBusinessMd();
 
-  // System prompt = SKILL.md prose + current business profile.
-  const systemPrompt = `${skillPrompt}\n\n## Current business profile (workspace/business.md)\n\n${businessMd}`;
-
-  // TODO(v0.5): re-enable Anthropic prompt caching on the static prefix.
-  // AI SDK 4.x expects system as a string (not the [{text, cache_control}] block
-  // shape that the raw Anthropic SDK accepts). To get the 90% cached-read
-  // discount in this setup, switch to providerOptions.anthropic.cacheControl
-  // on a CoreMessage, or pin the static prefix into a leading user message.
-  // Documented in CEO plan as a v0.5 cost optimization. Skipped for v0.
-  void isBYOK;
-
-  // Reload full message history from SQLite (server-side state — eng-review locked).
-  const stored = loadMessages(skillRunId);
-
-  // Model: configurable via ANTHROPIC_MODEL env var. Default Haiku 4.5
-  // (cheaper + faster + good enough for the consultant intake voice).
   const modelId = process.env.ANTHROPIC_MODEL ?? "claude-haiku-4-5-20251001";
 
-  // Stream the model response.
   const result = streamText({
     model: anthropic(modelId),
-    system: systemPrompt,
-    messages: stored.map((m) => ({ role: m.role as any, content: m.content })),
+    system: skillPrompt,
+    messages: clientMessages,
     maxTokens: 4096,
     tools: {
       propose_prescription: tool({
@@ -106,23 +71,17 @@ export async function POST(
             origin: z.string().describe("e.g. 'Gmail inbox' or 'WhatsApp message'"),
             destination: z.string().describe("e.g. 'drafted reply' or 'daily timesheet'"),
           }),
-          whatCouldGoWrong: z
-            .string()
-            .describe("One-line honest risk in plain English."),
+          whatCouldGoWrong: z.string().describe("One-line honest risk in plain English."),
           whyForYou: z
             .string()
             .describe(
               "One-line citation: 'You said in the intake: \"<verbatim quote>\".' This justifies WHY this prescription, for this owner, right now."
             ),
-          effort: z.enum(["S", "M", "L", "COMING_SOON"]).describe("S = quick, M = medium, L = long, COMING_SOON = stub card"),
-          isStub: z
-            .boolean()
-            .optional()
-            .describe("True if this is a 'coming soon' stub from the catalog."),
-          isCustomDesign: z
-            .boolean()
-            .optional()
-            .describe("True if this is a custom skill being designed via skill-design."),
+          effort: z
+            .enum(["S", "M", "L", "COMING_SOON"])
+            .describe("S = quick, M = medium, L = long, COMING_SOON = stub card"),
+          isStub: z.boolean().optional(),
+          isCustomDesign: z.boolean().optional(),
           nextSteps: z
             .array(z.string())
             .min(2)
@@ -131,17 +90,14 @@ export async function POST(
               "2-5 short concrete bullets describing what the owner needs to do/provide for this to actually run in real life — credentials to obtain, accounts to set up, files to create, decisions to make. Specific to this owner's tools (e.g., 'Get a Moneybird API token from Settings > Integrations'). Surfaced on the card after approve. NOT optional — every prescription must include this so the owner has a clear next move after clicking Approve."
             ),
         }),
-        execute: async (input) => {
-          const id = createPrescription(skillRunId, input);
-          return { ok: true, prescriptionId: id, message: "Card rendered to owner. Awaiting their action." };
-        },
+        // Server tool body intentionally minimal — the prescription is
+        // rendered client-side from the tool-call payload. We just echo
+        // back a confirmation so the model knows the card was rendered.
+        execute: async () => ({
+          ok: true,
+          message: "Card rendered for the owner.",
+        }),
       }),
-    },
-    onFinish: ({ text }) => {
-      // Persist the assistant turn after the stream completes.
-      if (text) {
-        appendMessage(skillRunId, "assistant", text);
-      }
     },
   });
 

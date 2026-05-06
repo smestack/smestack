@@ -24,8 +24,16 @@ export interface PrescriptionCardProps {
 
 export function PrescriptionCard(props: PrescriptionCardProps) {
   const [busy, setBusy] = useState(false);
+  // Initial "done" state from props.status. Accepts either the new client
+  // store convention ("approve"/"modify"/"reject") or the legacy server-side
+  // convention ("approved"/"rejected") for backwards-compat with any
+  // pre-existing data.
   const [done, setDone] = useState<string | null>(
-    props.status === "approved" ? "approve" : props.status === "rejected" ? "reject" : null
+    props.status === "approve" || props.status === "approved"
+      ? "approve"
+      : props.status === "reject" || props.status === "rejected"
+      ? "reject"
+      : null
   );
   const [locale] = useLocale();
 

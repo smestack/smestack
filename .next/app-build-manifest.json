@@ -21,20 +21,15 @@
       "static/chunks/main-app.js",
       "static/chunks/app/prescriptions/page.js"
     ],
-    "/api/prescriptions/route": [
+    "/api/answers/route": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/api/prescriptions/route.js"
+      "static/chunks/app/api/answers/route.js"
     ],
-    "/api/skill/[name]/route": [
+    "/_not-found/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/api/skill/[name]/route.js"
-    ],
-    "/api/prescriptions/[id]/action/route": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/api/prescriptions/[id]/action/route.js"
+      "static/chunks/app/_not-found/page.js"
     ]
   }
 }

@@ -5,29 +5,31 @@ import Link from "next/link";
 import { PrescriptionCard, type PrescriptionCardProps } from "@/components/PrescriptionCard";
 import { LocaleToggle } from "@/components/LocaleToggle";
 import { useLocale, t, type Locale } from "@/lib/i18n";
-
-interface PrescriptionFromApi extends PrescriptionCardProps {
-  id: string;
-  status: string;
-}
+import {
+  loadPrescriptions,
+  setPrescriptionStatus,
+  captureLeadEvent,
+  type ClientPrescription,
+} from "@/lib/prescription-store";
 
 export default function PrescriptionsPage() {
-  const [prescriptions, setPrescriptions] = useState<PrescriptionFromApi[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [prescriptions, setPrescriptions] = useState<ClientPrescription[]>([]);
+  const [hydrated, setHydrated] = useState(false);
   const [locale] = useLocale();
 
-  async function load() {
-    try {
-      const res = await fetch("/api/prescriptions");
-      const data = await res.json();
-      setPrescriptions(data.prescriptions ?? []);
-    } finally {
-      setLoading(false);
-    }
-  }
-
+  // Load from localStorage on mount. Re-load when storage changes (e.g.,
+  // user has /intake open in another tab).
   useEffect(() => {
-    load();
+    setPrescriptions(loadPrescriptions());
+    setHydrated(true);
+
+    function onStorage(ev: StorageEvent) {
+      if (ev.key === "mkbstack-prescriptions") {
+        setPrescriptions(loadPrescriptions());
+      }
+    }
+    window.addEventListener("storage", onStorage);
+    return () => window.removeEventListener("storage", onStorage);
   }, []);
 
   async function handleAction(
@@ -35,12 +37,25 @@ export default function PrescriptionsPage() {
     action: "approve" | "modify" | "reject",
     payload?: string
   ): Promise<void> {
-    await fetch(`/api/prescriptions/${id}/action`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ action, payload }),
-    });
-    await load();
+    // Update local state immediately (optimistic).
+    const updated = setPrescriptionStatus(id, action as any);
+    setPrescriptions(updated);
+
+    // Find the prescription that just got actioned, send it to lead-capture.
+    const card = updated.find((p) => p.id === id);
+    if (card) {
+      const eventName =
+        action === "approve"
+          ? "prescription_approved"
+          : action === "modify"
+          ? "prescription_modified"
+          : "prescription_rejected";
+      await captureLeadEvent({
+        event: eventName,
+        prescription: card,
+        meta: { locale, payload },
+      });
+    }
   }
 
   return (
@@ -67,9 +82,9 @@ export default function PrescriptionsPage() {
         <h1 className="text-3xl font-semibold mb-6">{t(locale, "rx.title")}</h1>
         <p className="text-zinc-600 mb-8 leading-relaxed">{t(locale, "rx.intro")}</p>
 
-        {loading && <p className="text-zinc-600">{t(locale, "common.loading")}</p>}
+        {!hydrated && <p className="text-zinc-600">{t(locale, "common.loading")}</p>}
 
-        {!loading && prescriptions.length === 0 && (
+        {hydrated && prescriptions.length === 0 && (
           <div className="border border-cream-200 rounded-md p-8 text-center">
             <p className="text-zinc-600 mb-4">{t(locale, "rx.empty.body")}</p>
             <Link
@@ -81,18 +96,18 @@ export default function PrescriptionsPage() {
           </div>
         )}
 
-        {!loading &&
+        {hydrated &&
           prescriptions.map((p) => (
             <PrescriptionCard
               key={p.id}
-              {...p}
+              {...(p as unknown as PrescriptionCardProps)}
               onAction={(action, payload) => handleAction(p.id, action, payload)}
             />
           ))}
 
-        {!loading && prescriptions.some((p) => p.status === "approved") && (
+        {hydrated && prescriptions.some((p) => p.status === "approve") && (
           <NextStepsBlock
-            approvedCount={prescriptions.filter((p) => p.status === "approved").length}
+            approvedCount={prescriptions.filter((p) => p.status === "approve").length}
             locale={locale}
           />
         )}
@@ -108,13 +123,17 @@ function NextStepsBlock({
   approvedCount: number;
   locale: Locale;
 }) {
-  const subject = encodeURIComponent(
-    t(locale, "next.path2.email_subject", approvedCount)
-  );
-  const body = encodeURIComponent(
-    t(locale, "next.path2.email_body", approvedCount)
-  );
+  const subject = encodeURIComponent(t(locale, "next.path2.email_subject", approvedCount));
+  const body = encodeURIComponent(t(locale, "next.path2.email_body", approvedCount));
   const mailto = `mailto:hallo@mkbstack.nl?subject=${subject}&body=${body}`;
+
+  // When the user clicks the quote-request CTA, also fire a lead event.
+  const onQuoteClick = () => {
+    captureLeadEvent({
+      event: "quote_requested",
+      meta: { locale, approvedCount },
+    });
+  };
 
   return (
     <section className="mt-16 pt-12 border-t border-cream-200">
@@ -154,6 +173,7 @@ function NextStepsBlock({
           </p>
           <a
             href={mailto}
+            onClick={onQuoteClick}
             className="inline-block min-h-[44px] px-6 py-3 rounded-md font-medium bg-amber-600 text-white hover:bg-amber-700 transition-colors"
           >
             {t(locale, "next.path2.cta")}
