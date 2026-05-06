@@ -10,6 +10,7 @@
     "triage": "bun run src/email-triage/run.ts",
     "auth:gmail": "bun run src/email-triage/gmail-oauth.ts",
     "voice:check": "bun run src/email-triage/voice-match.ts --check",
+    "leads": "bun --env-file=.env.production.local run scripts/leads.ts",
     "setup": "bash setup.sh"
   },
   "dependencies": {

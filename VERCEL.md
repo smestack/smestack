@@ -114,23 +114,57 @@ Antwoorden van elke voltooide intake landen in Vercel KV onder de key
 `leads:{ISO-timestamp}:{sessionId}`. Een capped lijst `leads:recent` (laatste
 50) geeft snelle toegang.
 
-**Optie A — KV CLI:**
+**Optie A — `bun run leads` (aanbevolen)**
+
+Vanuit de smestack-directory op je laptop:
 
 ```bash
-vercel kv lrange leads:recent 0 49
-# Dit geeft je de 50 meest recente lead-keys terug.
-# Voor één specifieke lead:
-vercel kv get "leads:2026-05-06T20:15:49Z:abc-123"
+bun run leads               # 20 meest recente leads, samenvattend
+bun run leads --all         # alle 50 (de cap op leads:recent)
+bun run leads <key>         # volledige JSON-payload van één lead
+bun run leads --refresh-env # opnieuw env vars pullen na een Vercel-rotatie
+```
+
+De eerste keer pulled het script automatisch je production env vars via
+`vercel env pull .env.production.local`. Dat bestand is gitignored (zit niet
+in je commits). Daarna leest het script direct uit de cache.
+
+Voorbeeld output:
+
+```
+=== 5 recent leads ===
+
+  2026-05-06T20:34:11Z  abc12345  intake_complete           —
+    ↳ 12 conversation turns
+  2026-05-06T20:34:55Z  abc12345  prescription_approved     hours-sentinel
+    ↳ Auto-prompt plumbers to log hours via WhatsApp...
+  2026-05-06T20:35:08Z  abc12345  prescription_approved     invoice-chase-automation
+  2026-05-06T20:35:42Z  def67890  intake_complete           —
+    ↳ 8 conversation turns
+  2026-05-06T20:36:01Z  def67890  quote_requested           —
+```
+
+Voor de volledige payload:
+
+```bash
+bun run leads "leads:2026-05-06T20:34:55Z:abc12345-..."
 ```
 
 **Optie B — Vercel dashboard:**
 
-Project → Storage → KV database → Browse. Je kan keys filteren op `leads:*`.
+Project → Storage → klik de Redis store → er is een ingebouwde Data Browser
+waar je `LRANGE leads:recent 0 49` en `GET <key>` direct kan typen.
 
 **Optie C — een mini admin-page bouwen (v0.6 idee):**
 
 Een `/admin/leads` route die KV leest en de leads als tabel rendert. Beveiligd
 met een simple shared password (basic auth) — niet voor v0.1.
+
+> **Let op:** de `vercel kv ...` CLI subcommands bestaan niet meer in de
+> huidige Vercel CLI (waren onderdeel van het oude @vercel/kv beta-pad). De
+> CLI interpreteert `kv` als een deploy-path-argument en geeft "Can't deploy
+> more than one path" — een misleidende error. Gebruik `bun run leads` of
+> de dashboard data browser.
 
 ## Wat niet op Vercel werkt (en waarom)
 

@@ -25,3 +25,4 @@ workspace/oauth-tokens.json
 # Lead capture local fallback (workspace/ already gitignored, this is explicit)
 workspace/leads.jsonl
 
+.vercel
