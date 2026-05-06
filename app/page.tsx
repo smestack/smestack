@@ -87,9 +87,11 @@ export default function Home() {
             Start het gesprek
           </Link>
 
-          {/* Layer 2: micro-copy under the CTA */}
+          {/* Layer 2: micro-copy under the CTA. Honest framing — implementation
+              is opt-in paid, but the diagnosis is always free. No pressure. */}
           <p className="mt-6 text-sm text-zinc-600 italic">
-            ~20 minuten. Pauzeer en hervat wanneer je wilt. Geen verkooppraatje na afloop.
+            ~20 minuten. Pauzeer en hervat wanneer je wilt. Geen druk —
+            implementatie is optioneel.
           </p>
         </div>
       </section>
@@ -121,11 +123,23 @@ export default function Home() {
           <p className="text-zinc-800 leading-relaxed">
             Als je een specifieke automatisering daadwerkelijk wilt
             installeren (bijvoorbeeld een WhatsApp-nummer voor je ploeg, of
-            een AI-model dat draaft op de achtergrond), betaal je{" "}
+            een AI-model dat draait op de achtergrond), betaal je{" "}
             <em>rechtstreeks aan die leverancier</em> — bijvoorbeeld Twilio of
             Anthropic. Vaak is dat een paar tientjes per maand. Of nul: jij
             beslist of dat de moeite waard is.
           </p>
+
+          <h3 className="text-base font-semibold mt-8 mb-3">
+            En als ik het zelf niet wil installeren?
+          </h3>
+          <p className="text-zinc-800 leading-relaxed">
+            Dan kun je ons inschakelen — wij doen het voor je. Dat is een
+            losse, betaalde dienst die je <em>na</em> het gesprek kunt
+            aanvragen, niet vooraf. Geen abonnement, geen retainer: je krijgt
+            een offerte voor exact die ene automatisering, en jij beslist of
+            je groen licht geeft.
+          </p>
+
           <p className="text-zinc-600 leading-relaxed mt-6 italic text-sm">
             Geen lock-in. Geen abonnement. Geen verrassingen.
           </p>
@@ -169,7 +183,7 @@ export default function Home() {
             Start het gesprek
           </Link>
           <p className="mt-4 text-sm text-zinc-600 italic">
-            Vrijblijvend. Geen creditcard nodig.
+            Vrijblijvend. Geen creditcard. Implementatie is optioneel.
           </p>
         </div>
       </section>
