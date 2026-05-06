@@ -64,7 +64,11 @@ export function ChatShell({ skillName, initialPrompt, rightRailBullets }: ChatSh
   }, [messages]);
 
   // Extract propose_prescription tool calls into the client prescription
-  // store. Each tool invocation becomes a card that /prescriptions renders.
+  // store. Each tool invocation becomes a card that /voorstellen renders.
+  // Also fire a `prescription_proposed` lead event PER unique tool call so
+  // the founders see in KV every proposal the model made (even unapproved).
+  // Dedupe by toolCallId so React StrictMode + re-renders don't double-fire.
+  const firedProposalIdsRef = useRef<Set<string>>(new Set());
   useEffect(() => {
     for (const m of messages) {
       const invocations = (m as any).toolInvocations as
@@ -83,9 +87,23 @@ export function ChatShell({ skillName, initialPrompt, rightRailBullets }: ChatSh
           status: "pending",
           createdAt: new Date().toISOString(),
         } as any);
+
+        // First time we see this tool-call ID? Fire the lead event.
+        if (!firedProposalIdsRef.current.has(inv.toolCallId)) {
+          firedProposalIdsRef.current.add(inv.toolCallId);
+          captureLeadEvent({
+            event: "prescription_proposed",
+            prescription: { ...inv.args, toolCallId: inv.toolCallId },
+            conversation: messages.map((mm) => ({
+              role: mm.role,
+              content: typeof mm.content === "string" ? mm.content : "",
+            })),
+            meta: { locale, skillName },
+          });
+        }
       }
     }
-  }, [messages]);
+  }, [messages, locale, skillName]);
 
   // When the model says the intake is complete, fire a lead-capture event.
   // Heuristic: the model emitted a propose_prescription tool call AND
@@ -142,7 +160,7 @@ export function ChatShell({ skillName, initialPrompt, rightRailBullets }: ChatSh
           </div>
         ))}
 
-        {/* When prescriptions exist, show a soft inline pointer to /prescriptions. */}
+        {/* When prescriptions exist, show a soft inline pointer to /voorstellen. */}
         {hasPrescriptions && (
           <div className="mb-8 p-4 border border-amber-200 bg-amber-50 rounded-md text-sm">
             <p className="text-zinc-800 mb-2">
@@ -151,7 +169,7 @@ export function ChatShell({ skillName, initialPrompt, rightRailBullets }: ChatSh
                 : "I've prepared some concrete proposals for you."}
             </p>
             <Link
-              href="/prescriptions"
+              href="/voorstellen"
               className="text-amber-700 underline hover:text-amber-800"
             >
               {locale === "nl"

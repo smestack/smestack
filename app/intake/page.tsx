@@ -16,7 +16,7 @@ export default function IntakePage() {
         </Link>
         <div className="flex items-center gap-3">
           <Link
-            href="/prescriptions"
+            href="/voorstellen"
             className="mono text-xs uppercase tracking-wider text-zinc-600 hover:text-amber-700"
           >
             {t(locale, "intake.header.proposals_link")}

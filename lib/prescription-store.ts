@@ -128,7 +128,13 @@ export function saveMessages(messages: StoredMessage[]): void {
 
 // ─── Lead-capture client-side helper. Wraps fetch /api/answers.
 export async function captureLeadEvent(payload: {
-  event: "intake_complete" | "prescription_approved" | "prescription_modified" | "prescription_rejected" | "quote_requested";
+  event:
+    | "intake_complete"
+    | "prescription_proposed"
+    | "prescription_approved"
+    | "prescription_modified"
+    | "prescription_rejected"
+    | "quote_requested";
   conversation?: Array<{ role: string; content: string }>;
   prescription?: unknown;
   meta?: Record<string, unknown>;

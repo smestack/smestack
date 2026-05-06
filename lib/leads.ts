@@ -33,6 +33,7 @@ export interface LeadPayload {
   /** What kind of write this is. */
   event:
     | "intake_complete"
+    | "prescription_proposed"
     | "prescription_approved"
     | "prescription_modified"
     | "prescription_rejected"

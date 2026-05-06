@@ -22,6 +22,7 @@ export const runtime = "nodejs";
 
 const VALID_EVENTS = new Set([
   "intake_complete",
+  "prescription_proposed",
   "prescription_approved",
   "prescription_modified",
   "prescription_rejected",

@@ -222,7 +222,7 @@ export default function Home() {
 
       {/* Footer */}
       <footer className="px-6 py-8 text-center text-sm text-zinc-600 border-t border-cream-200">
-        <Link href="/prescriptions" className="underline hover:text-amber-700">
+        <Link href="/voorstellen" className="underline hover:text-amber-700">
           {t(locale, "footer.see_prescriptions")}
         </Link>
         <span className="mx-2">·</span>

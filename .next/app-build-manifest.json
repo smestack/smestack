@@ -16,10 +16,10 @@
       "static/chunks/main-app.js",
       "static/chunks/app/intake/page.js"
     ],
-    "/prescriptions/page": [
+    "/voorstellen/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/prescriptions/page.js"
+      "static/chunks/app/voorstellen/page.js"
     ],
     "/api/answers/route": [
       "static/chunks/webpack.js",
