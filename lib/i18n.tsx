@@ -124,6 +124,10 @@ const dict = {
     nl: "Lees klantverhalen",
     en: "Read customer stories",
   },
+  "footer.see_guides": {
+    nl: "Bekijk handleidingen",
+    en: "View guides",
+  },
   "footer.version": { nl: "v0.1 — lokale modus", en: "v0.1 — local mode" },
 
   // ─── nav ────────────────────────────────────────────

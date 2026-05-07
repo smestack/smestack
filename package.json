@@ -9,6 +9,8 @@
     "start": "next start --port 3002",
     "gen:skill-docs": "bun run scripts/gen-skill-docs.ts",
     "gen:skill-docs:check": "bun run scripts/gen-skill-docs.ts --check",
+    "gen:guide": "python3 scripts/skill-guides/skill_guide.py",
+    "gen:guide:moneybird": "python3 scripts/skill-guides/skill_guide.py scripts/skill-guides/skills/moneybird-payment-reminders/skill.json --output public/handleidingen/moneybird-api-sleutel.html",
     "triage": "bun run src/email-triage/run.ts",
     "auth:gmail": "bun run src/email-triage/gmail-oauth.ts",
     "voice:check": "bun run src/email-triage/voice-match.ts --check",

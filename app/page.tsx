@@ -291,6 +291,10 @@ export default function Home() {
           {t(locale, "footer.see_stories")}
         </Link>
         <span className="mx-2">·</span>
+        <Link href="/handleidingen" className="underline hover:text-amber-700">
+          {t(locale, "footer.see_guides")}
+        </Link>
+        <span className="mx-2">·</span>
         <Link href="/voorstellen" className="underline hover:text-amber-700">
           {t(locale, "footer.see_prescriptions")}
         </Link>

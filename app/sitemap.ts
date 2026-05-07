@@ -12,6 +12,18 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "weekly",
       priority: 1.0,
     },
+    {
+      url: `${SITE_URL}/handleidingen`,
+      lastModified: now,
+      changeFrequency: "monthly",
+      priority: 0.7,
+    },
+    {
+      url: `${SITE_URL}/handleidingen/moneybird-api-sleutel.html`,
+      lastModified: now,
+      changeFrequency: "monthly",
+      priority: 0.6,
+    },
     // Klantverhalen is mock — keep it out of the sitemap until real.
     // Intake + voorstellen are interactive flows; no SEO value in indexing.
   ];

@@ -1,0 +1,183 @@
+{
+  "slug": "moneybird-api-sleutel-handleiding",
+  "lang": "nl",
+  "title_tag": "API-sleutel uit Moneybird halen — stap-voor-stap",
+
+  "hero": {
+    "estimated_time_label": "Klaar in ongeveer 5 minuten",
+    "title": "Een API-sleutel uit Moneybird halen",
+    "subtitle": "Een rustige stap-voor-stap-uitleg met schermafbeeldingen. Geen voorkennis nodig — je hoeft alleen in te loggen op Moneybird en mee te klikken."
+  },
+
+  "sections": [
+    {
+      "type": "section",
+      "heading": "Waar gaat dit over?",
+      "paragraphs": [
+        "We zetten een automatische betalingsherinnering op voor aannemers die structureel te laat betalen. Om dat te laten werken, moet ons systeem op een veilige manier in jouw Moneybird kunnen kijken naar wélke facturen al wel of nog niet betaald zijn. Daar is een **API-sleutel** voor: een soort lange wachtwoord-code die jij eenmalig in Moneybird aanmaakt en aan ons doorgeeft."
+      ],
+      "callout": {
+        "type": "info",
+        "title": "Wat doet die automatisering precies?",
+        "body": "Moneybird kijkt elke dag welke facturen open staan en hoeveel dagen ze al te laat zijn. Voor facturen die te lang openstaan, gaat er automatisch een herinnering via Outlook naar de aannemer. Eens per week krijg jij zelf een net overzicht in je mail van wie nog niet heeft betaald."
+      }
+    },
+
+    {
+      "type": "flow",
+      "nodes": [
+        { "title": "Moneybird", "subtitle": "open facturen" },
+        { "title": "Ons systeem", "subtitle": "checkt dagelijks" },
+        { "title": "Outlook", "subtitle": "stuurt herinnering" }
+      ]
+    },
+
+    {
+      "type": "section",
+      "heading": "Wat je nodig hebt voordat je begint",
+      "card_items": [
+        "Een laptop of computer (een telefoon kan, maar de schermpjes zijn op een laptop een stuk overzichtelijker).",
+        "Je **inloggegevens van Moneybird** (e-mailadres + wachtwoord). Heb je twee-staps-verificatie aanstaan? Hou je telefoon erbij.",
+        "Een rustig moment van ongeveer 5 minuten.",
+        "Een veilige plek om de sleutel even tijdelijk te bewaren — bijvoorbeeld een geopende e-mail aan jezelf, of de notitie-app op je telefoon."
+      ]
+    },
+
+    { "type": "section", "heading": "Stap voor stap" },
+
+    {
+      "type": "step",
+      "number": 1,
+      "title": "Log in op Moneybird",
+      "paragraphs": [
+        "Open je internetbrowser (bijvoorbeeld Chrome, Safari of Edge) en ga naar **moneybird.com**. Klik rechtsboven op `Inloggen` en vul je e-mailadres en wachtwoord in zoals je dat normaal ook doet.",
+        "Je komt nu op het beginscherm van Moneybird, met links het menu (Overzicht, Facturen, Bank, enzovoort)."
+      ]
+    },
+
+    {
+      "type": "step",
+      "number": 2,
+      "title": "Klik rechtsboven op je naam → `Gebruikersaccount`",
+      "paragraphs": [
+        "Helemaal rechtsboven in beeld zie je je eigen naam staan, met een klein pijltje. Klik daarop. Er klapt een menu uit. Kies **Gebruikersaccount**."
+      ],
+      "screenshot": {
+        "src": "screenshots/step-1.jpg",
+        "alt": "Moneybird hoofdscherm met het menu rechtsboven open. De rode pijl wijst naar het kopje 'Gebruikersaccount'.",
+        "caption": "Het menu rechtsboven. Kies *Gebruikersaccount* (de andere opties — Thema, Uitloggen — heb je nu niet nodig)."
+      }
+    },
+
+    {
+      "type": "step",
+      "number": 3,
+      "title": "Kies de tegel `Ontwikkelaars`",
+      "paragraphs": [
+        "Je ziet nu een pagina met allerlei tegels — Jouw gegevens, Passkeys, Meldingen, enzovoort. Wij hebben er maar één nodig: **Ontwikkelaars**. Klik daarop."
+      ],
+      "screenshot": {
+        "src": "screenshots/step-2.jpg",
+        "alt": "Pagina 'Gebruikersaccount' met negen tegels. De rode pijl wijst naar de tegel 'Ontwikkelaars'.",
+        "caption": "Onderaan de tweede rij staat *Ontwikkelaars*. Schrik niet van het woord — je hoeft niets te ontwikkelen, je gebruikt alleen dit ene scherm."
+      },
+      "callout": {
+        "type": "info",
+        "title": "\"Ontwikkelaars\" — wat is dat?",
+        "body": "Dat is gewoon de plek in Moneybird waar de toegangssleutels worden gemaakt. Je gaat geen software bouwen, je drukt alleen op een paar knoppen."
+      }
+    },
+
+    {
+      "type": "step",
+      "number": 4,
+      "title": "Klik rechtsboven op de groene knop `API token aanmaken`",
+      "paragraphs": [
+        "Je komt op een pagina met de titel **Ontwikkelaars** en wat uitleg over de Moneybird API. Rechtsboven staat een groene knop. Daar moet je op klikken."
+      ],
+      "screenshot": {
+        "src": "screenshots/step-4.jpg",
+        "alt": "Pagina 'Ontwikkelaars'. De rode pijl wijst naar de groene knop 'API token aanmaken' rechtsboven.",
+        "caption": "De enige knop die je hier nodig hebt: rechtsboven, groen, met de tekst *API token aanmaken*."
+      }
+    },
+
+    {
+      "type": "step",
+      "number": 5,
+      "title": "Vul het formulier in en klik op `Opslaan`",
+      "paragraphs": [
+        "Je krijgt nu een formulier. Niets engs — je vult drie dingen in:"
+      ],
+      "ordered_list": [
+        "**Naam** — verzin een naam waaraan jij later kunt herkennen waar deze sleutel voor was. Bijvoorbeeld: *Betalingsherinneringen*.",
+        "Klik op het bolletje voor **\"API token voor persoonlijk gebruik\"** (het bovenste, niet het onderste).",
+        "Bij **Administratie** kies je de juiste administratie. Heb je er maar één? Dan staat die er al.",
+        "Bij **Toegang tot onderdelen** mag je alle vinkjes laten staan, óf alleen *Verkoopfacturen* aanvinken — dat is genoeg voor de herinneringen. Twijfel je? Laat ze gewoon allemaal aan; veiliger is beperken tot alleen verkoopfacturen."
+      ],
+      "screenshot": {
+        "src": "screenshots/step-6.jpg",
+        "alt": "Het formulier 'API token aanmaken'. Naamveld is ingevuld, het bolletje 'API token voor persoonlijk gebruik' is geselecteerd, alle vinkjes voor toegang staan aan, en de pijl wijst naar de blauwe knop 'Opslaan'.",
+        "caption": "Zo ziet het formulier eruit. Bovenste bolletje aanvinken, naam invullen, daarna *Opslaan*."
+      }
+    },
+
+    {
+      "type": "step",
+      "number": 6,
+      "title": "Kopieer de sleutel die nu verschijnt",
+      "paragraphs": [
+        "Moneybird laat nu een lange reeks letters en cijfers zien — dat is jouw API-sleutel. Selecteer hem helemaal en kopieer hem (klik met je rechtermuisknop → Kopiëren, of *Cmd + C* op een Mac, *Ctrl + C* op Windows)."
+      ],
+      "screenshot": {
+        "src": "screenshots/step-7.jpg",
+        "alt": "De pagina waar Moneybird de zojuist aangemaakte access token toont, met een rode pijl die naar de balk wijst waarin de sleutel staat.",
+        "caption": "In het echt zie je hier een lange code. Op de afbeelding is hij zwart gemaakt — bij jou staat hij gewoon leesbaar."
+      },
+      "callout": {
+        "type": "warn",
+        "title": "Belangrijk: deze sleutel zie je maar één keer",
+        "body": "Sluit dit scherm niet voordat je hem ergens veilig hebt opgeslagen. Moneybird laat hem daarna nooit meer zien (om veiligheidsredenen). Plak hem alvast in een mail aan jezelf of een notitie. Ben je hem toch kwijt? Geen ramp — je kunt gewoon een nieuwe aanmaken, je gooit de oude dan weg."
+      }
+    },
+
+    {
+      "type": "section",
+      "heading": "En nu? Wat doe je met die sleutel?",
+      "callout": {
+        "type": "good",
+        "title": "Stuur de sleutel veilig op naar de persoon die de automatisering installeert",
+        "body": "Plak de sleutel in een mail aan diegene (of in het kanaal dat hij/zij heeft aangewezen). Zij plakken hem eenmalig in het systeem en daarna hoef jij er nooit meer naar te kijken.\nBehandel de sleutel als een wachtwoord: niet rondslingeren, niet op een briefje boven je bureau, en niet in een chatgroep met onbekenden."
+      }
+    },
+
+    {
+      "type": "faq",
+      "heading": "Veelgestelde vragen",
+      "items": [
+        {
+          "q": "Is dit gevaarlijk? Geef ik nu mijn boekhouding weg?",
+          "a": "Nee. Een API-sleutel geeft beperkte toegang — alleen tot de onderdelen die jij hebt aangevinkt (in dit geval verkoopfacturen). De ontvanger kan jouw wachtwoord níet zien en kan ook niet bij je bankrekening of inloggen als jou. Wil je later stoppen? Eén klik in Moneybird en de sleutel werkt niet meer."
+        },
+        {
+          "q": "Wat als ik me vergis of verkeerd klik?",
+          "a": "Niets ergs. Niets in dit proces is onomkeerbaar. Je kunt aangemaakte sleutels altijd weer weggooien onder *Gebruikersaccount → Ontwikkelaars*, en gewoon opnieuw beginnen."
+        },
+        {
+          "q": "Hoe gooi ik een sleutel later weg?",
+          "a": "Ga naar *Gebruikersaccount → Ontwikkelaars*. Daar staat een lijstje met al je sleutels. Achter elke sleutel zit een prullenbak-icoontje. Klik daarop en bevestig — klaar. Vanaf dat moment werkt die sleutel niet meer."
+        },
+        {
+          "q": "Ik heb mijn sleutel niet gekopieerd voor ik wegklikte. Wat nu?",
+          "a": "Geen paniek. Maak gewoon een nieuwe aan via dezelfde stappen 4 t/m 6. De oude (die je niet meer hebt) kun je daarna weggooien zodat je geen losse eindjes hebt."
+        },
+        {
+          "q": "Waarom moet de sleutel \"voor persoonlijk gebruik\" zijn?",
+          "a": "\"Voor een externe applicatie\" is bedoeld voor softwarebedrijven die hun product aan veel Moneybird-gebruikers willen koppelen. Voor één eigen automatisering (zoals deze betalingsherinneringen) is \"persoonlijk gebruik\" precies goed — eenvoudiger en sneller klaar."
+        }
+      ]
+    }
+  ],
+
+  "footer": "Dit is een instructie voor het aanmaken van een API-sleutel in Moneybird. Schermafbeeldingen tonen de standaard Moneybird-interface. De getoonde naam in de schermbeelden is van een voorbeeldaccount."
+}
