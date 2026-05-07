@@ -4,9 +4,11 @@
   "description": "The AI manager, installed at SMEs. Forked from gstack.",
   "type": "module",
   "scripts": {
-    "dev": "next dev --port 3002",
-    "build": "next build",
+    "dev": "bun run gen:skill-docs && next dev --port 3002",
+    "build": "bun run gen:skill-docs && next build",
     "start": "next start --port 3002",
+    "gen:skill-docs": "bun run scripts/gen-skill-docs.ts",
+    "gen:skill-docs:check": "bun run scripts/gen-skill-docs.ts --check",
     "triage": "bun run src/email-triage/run.ts",
     "auth:gmail": "bun run src/email-triage/gmail-oauth.ts",
     "voice:check": "bun run src/email-triage/voice-match.ts --check",
