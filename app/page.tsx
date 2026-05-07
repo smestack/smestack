@@ -56,6 +56,61 @@ const testimonials: Testimonial[] = [
   },
 ];
 
+// Static JSON-LD for FAQPage. Server-rendered into the HTML so Google +
+// LLM crawlers can read it without executing JS. Mirrors the prose in the
+// "Wat kost dit?" section but in machine-readable form.
+const faqJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: [
+    {
+      "@type": "Question",
+      name: "Wat kost MKBStack?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text:
+          "Niets. Het hele intake-gesprek en alle voorstellen zijn gratis. MKBStack is open source en je draait het op je eigen computer of laptop. Er is geen MKBStack-abonnement, geen account en geen creditcard nodig.",
+      },
+    },
+    {
+      "@type": "Question",
+      name: "Moet ik betalen om de voorstellen te zien?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text:
+          "Nee. Het gesprek én de voorstellen zijn altijd gratis. Je betaalt pas iets als jij zelf besluit een specifieke automatisering daadwerkelijk te installeren — en dan betaal je rechtstreeks aan de leverancier (bijvoorbeeld Twilio of Anthropic), niet aan MKBStack.",
+      },
+    },
+    {
+      "@type": "Question",
+      name: "En als ik het zelf niet wil installeren?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text:
+          "Dan kun je het MKBStack-team inschakelen — wij doen het voor je. Dat is een losse, betaalde dienst die je na het gesprek kunt aanvragen, niet vooraf. Geen abonnement, geen retainer: je krijgt een offerte voor exact die ene automatisering, en jij beslist of je groen licht geeft.",
+      },
+    },
+    {
+      "@type": "Question",
+      name: "Voor welk soort bedrijf is MKBStack bedoeld?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text:
+          "MKBStack is ontworpen voor Nederlandse MKB-ondernemers met 1-50 medewerkers in dienstverlenende sectoren — loodgieters, installateurs, glaszetters, interieurontwerpers, ZZP'ers, kleine bureaus. Geen technische kennis vereist.",
+      },
+    },
+    {
+      "@type": "Question",
+      name: "Wat is open source en waarom maakt dat uit?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text:
+          "MKBStack is volledig open source onder de MIT-licentie. Je kunt de broncode inzien op GitHub, zelf hosten, aanpassen en forken. Geen lock-in: als je MKBStack ooit niet meer wil gebruiken, blijven jouw automatiseringen draaien op jouw eigen account bij Twilio, Anthropic, et cetera.",
+      },
+    },
+  ],
+};
+
 export default function Home() {
   const [locale] = useLocale();
 
@@ -67,6 +122,10 @@ export default function Home() {
 
   return (
     <main className="min-h-screen">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
+      />
       {/* Top bar with locale toggle + nav */}
       <div className="px-6 py-4 flex items-center justify-end gap-4">
         <Link

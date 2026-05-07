@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { LocaleToggle } from "@/components/LocaleToggle";
 import { useLocale, t, type Locale } from "@/lib/i18n";
 
@@ -15,6 +16,7 @@ interface Story {
   name: string;
   role_nl: string;
   role_en: string;
+  image: string;
   headline_nl: string;
   headline_en: string;
   pull_quote_nl: string;
@@ -37,6 +39,7 @@ const stories: Story[] = [
     name: "Mark",
     role_nl: "loodgieter, Utrecht",
     role_en: "plumber, Utrecht",
+    image: "/klantverhalen/mark.png",
     headline_nl: "Drie ploegen, één WhatsApp-nummer, geen zaterdag-administratie",
     headline_en: "Three crews, one WhatsApp number, no Saturday paperwork",
     pull_quote_nl:
@@ -66,6 +69,7 @@ const stories: Story[] = [
     name: "Anouk",
     role_nl: "interieurontwerpster, Den Bosch",
     role_en: "interior designer, Den Bosch",
+    image: "/klantverhalen/anouk.png",
     headline_nl: "Maandagochtend openen met de juiste vraag, niet het juiste schermpje",
     headline_en: "Opening Monday with the right question, not the right screen",
     pull_quote_nl:
@@ -95,6 +99,7 @@ const stories: Story[] = [
     name: "Rachid",
     role_nl: "glaszetter, Rotterdam",
     role_en: "glazier, Rotterdam",
+    image: "/klantverhalen/rachid.png",
     headline_nl: "Offertes die nooit meer in een mailbox blijven hangen",
     headline_en: "Quotes that never get stuck in an inbox again",
     pull_quote_nl:
@@ -124,6 +129,7 @@ const stories: Story[] = [
     name: "Ben",
     role_nl: "elektrotechnisch installateur, Eindhoven",
     role_en: "electrical engineer, Eindhoven",
+    image: "/klantverhalen/ben.png",
     headline_nl: "De telefoon die niet meer in de auto rinkelt",
     headline_en: "The phone that no longer rings in the van",
     pull_quote_nl:
@@ -228,6 +234,21 @@ function StoryArticle({ story, locale }: { story: Story; locale: Locale }) {
 
   return (
     <article id={story.slug} className="scroll-mt-24">
+      <div className="mb-8 -mx-6 sm:mx-0 overflow-hidden sm:rounded-lg border-y sm:border border-cream-200 bg-cream-50">
+        <Image
+          src={story.image}
+          alt={
+            locale === "nl"
+              ? `Portret van ${story.name}, ${story.role_nl}`
+              : `Portrait of ${story.name}, ${story.role_en}`
+          }
+          width={1024}
+          height={1024}
+          className="w-full h-auto aspect-[4/3] object-cover"
+          priority={story.slug === "mark-loodgieter"}
+        />
+      </div>
+
       <header className="mb-6">
         <div className="mono text-xs uppercase tracking-wider text-amber-700 mb-3">
           {story.name} · {role}

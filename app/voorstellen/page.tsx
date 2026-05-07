@@ -77,6 +77,12 @@ export default function PrescriptionsPage() {
           >
             {t(locale, "rx.header.intake_link")}
           </Link>
+          <Link
+            href="/verbindingen"
+            className="mono text-xs uppercase tracking-wider text-zinc-600 hover:text-amber-700"
+          >
+            {locale === "nl" ? "Verbindingen" : "Connections"}
+          </Link>
           <LocaleToggle />
         </div>
       </header>

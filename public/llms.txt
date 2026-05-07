@@ -1,0 +1,54 @@
+# MKBStack
+
+> Open-source AI-manager voor Nederlandse MKB-ondernemers. Een vrijblijvend gesprek van ~20 minuten over jouw bedrijf levert concrete, risico-getoetste voorstellen op die jij goedkeurt voordat er iets live gaat.
+
+## Wat MKBStack doet
+
+MKBStack is een open-source platform dat het gstack-concept (role-based AI-agents met gestructureerde workflows) toegankelijk maakt voor MKB-ondernemers met 1-50 medewerkers. Geen terminal, geen code, geen technische kennis nodig.
+
+Het werkt in drie stappen:
+1. **Intake** — een gesprek van ~20 minuten via de browser, in het Nederlands of Engels, waar MKBStack jouw bedrijf leert kennen (branche, omvang, pijnpunten, tools).
+2. **Voorstellen** — op basis van het gesprek genereert MKBStack 3-5 concrete automatiseringen, elk met datastroom, risico-niveau en motivatie.
+3. **Goedkeuring** — jij keurt elk voorstel afzonderlijk goed, past aan, of wijst af. Niets gaat live zonder expliciete groen-licht.
+
+## Kosten en business model
+
+- Het gesprek en de voorstellen zijn **volledig gratis**.
+- MKBStack zelf is **open source** (MIT) — je draait het op je eigen computer of laptop.
+- Geen account, geen creditcard, geen abonnement, geen lock-in.
+- Als je een specifieke automatisering wil installeren, betaal je rechtstreeks aan derden (bijvoorbeeld Twilio voor een WhatsApp-nummer, Anthropic voor de AI-agents). Vaak een paar tientjes per maand. Of nul, als je het zelf bouwt.
+- Optioneel: na het gesprek kun je het MKBStack-team inhuren om de goedgekeurde voorstellen voor je te installeren. Losse offerte per automatisering, geen retainer.
+
+## Voorbeelden van automatiseringen
+
+- **uren-sentinel** — ploeg-uren via WhatsApp loggen, vrijdags overzicht voor de eigenaar.
+- **invoice-chase** — wekelijks concept-mails klaarzetten voor openstaande facturen, eigenaar drukt op verzenden.
+- **anne-coverage** — AI-receptionist buiten kantooruren die urgente calls doorzet, niet-urgente naar WhatsApp samenvat.
+- **offerte-follow-up** — automatische follow-up op verstuurde offertes, met de stem van de ondernemer.
+
+## Technische opbouw
+
+- Frontend: Next.js 15, React, TypeScript, Tailwind CSS
+- AI: Anthropic Claude (model is configureerbaar — Haiku 4.5 voor snelheid, Sonnet voor diepgang)
+- Storage: Vercel KV / Upstash Redis voor lead-events, browser localStorage voor voorstellen
+- Hosting: zelf hosten (open source) of Vercel (one-click deploy)
+- Skills: gestructureerde Markdown-bestanden in `.claude/skills/smestack/` die de AI als systeem-prompt leest
+
+## Doelgroep
+
+Nederlandse MKB-ondernemers met 1-50 medewerkers in dienstverlenende sectoren (loodgieters, installateurs, glaszetters, interieurontwerpers, ZZP'ers, kleine bureaus). De product-feel is bewust niet "enterprise SaaS" — het voelt als een consultant die naast je komt zitten, niet een dashboard met dropdowns.
+
+## Founders
+
+- **Karel Schorer** — bouwer / engineer
+- **Jeroen** — co-founder / product
+
+## Links
+
+- Website: https://mkbstack.nl
+- GitHub: https://github.com/mkbstack/mkbstack
+- Contact: hallo@mkbstack.nl
+
+## Licentie
+
+MIT (volledig open source, fork-vriendelijk).
