@@ -137,7 +137,7 @@ export async function POST(
             .min(2)
             .max(5)
             .describe(
-              "2-5 short concrete bullets describing what the owner needs to do/provide for this to actually run in real life — credentials to obtain, accounts to set up, files to create, decisions to make. Specific to this owner's tools (e.g., 'Get a Moneybird API token from Settings > Integrations'). Surfaced on the card after approve. NOT optional — every prescription must include this so the owner has a clear next move after clicking Approve."
+              "2-5 short concrete bullets describing what the owner needs to do/provide for this to actually run. Surfaced on the card after approve. **HANDLEIDINGEN RULE**: if a step requires the owner to fetch a credential/token/API-key for a tool that has a handleiding (see the skill's HANDLEIDINGEN catalog section), that step MUST be a single string of the form '/handleidingen/<slug>' — NOT a 3-bullet manual procedure. Example GOOD: ['/handleidingen/moneybird-api-sleutel', 'Stuur me het token zodra je het hebt']. Example BAD: ['Log in op Moneybird', 'Ga naar Instellingen > Integraties', 'Genereer een token']. The frontend renders /handleidingen/<slug> entries as a styled link-card with the guide title; manually written setup steps defeat that affordance. NOT optional — every prescription must include nextSteps so the owner has a clear next move after clicking Approve."
             ),
         }),
         // Server tool body intentionally minimal — the prescription is

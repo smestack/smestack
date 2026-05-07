@@ -20,6 +20,7 @@ import { readFileSync, writeFileSync, existsSync, readdirSync } from "node:fs";
 import { join } from "node:path";
 import { PREAMBLE } from "./resolvers/preamble";
 import { PUSHBACK } from "./resolvers/pushback";
+import { HANDLEIDINGEN_RESOLVER } from "./resolvers/handleidingen";
 
 const SKILLS_DIR = ".claude/skills/smestack";
 const CHECK = process.argv.includes("--check");
@@ -27,6 +28,7 @@ const CHECK = process.argv.includes("--check");
 const RESOLVERS: Record<string, string> = {
   PREAMBLE,
   PUSHBACK,
+  HANDLEIDINGEN: HANDLEIDINGEN_RESOLVER,
 };
 
 function substitute(template: string, file: string): string {

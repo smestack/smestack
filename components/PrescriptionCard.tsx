@@ -1,9 +1,13 @@
 "use client";
 
 import { useState } from "react";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, BookOpen } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useLocale, t } from "@/lib/i18n";
+import {
+  findHandleiding,
+  handleidingHref,
+} from "@/lib/handleidingen-catalog";
 
 export interface PrescriptionCardProps {
   id: string;
@@ -171,14 +175,11 @@ export function PrescriptionCard(props: PrescriptionCardProps) {
           <h3 className="mono text-xs uppercase tracking-wider text-amber-700 mb-3">
             {t(locale, "card.section.next_steps")}
           </h3>
-          <ul className="space-y-2 text-sm text-zinc-800">
+          <ol className="space-y-2 text-sm text-zinc-800">
             {props.nextSteps.map((step, i) => (
-              <li key={i} className="flex gap-2">
-                <span className="mono text-amber-600 select-none">{i + 1}.</span>
-                <span>{step}</span>
-              </li>
+              <NextStepItem key={i} index={i} step={step} locale={locale} />
             ))}
-          </ul>
+          </ol>
           <p className="mt-4 text-xs text-zinc-600 italic">
             {t(locale, "card.next_steps.outro")}
           </p>
@@ -203,5 +204,60 @@ export function PrescriptionCard(props: PrescriptionCardProps) {
         </div>
       )}
     </article>
+  );
+}
+
+/**
+ * Render one entry from nextSteps. If the AI referenced a handleiding
+ * (via "/handleidingen/<slug>" or just "<slug>" matching the catalog),
+ * render an accent link-card instead of a plain bullet — that's the
+ * "click here to learn how to get the API token" affordance.
+ */
+function NextStepItem({
+  index,
+  step,
+  locale,
+}: {
+  index: number;
+  step: string;
+  locale: "nl" | "en";
+}) {
+  const guide = findHandleiding(step);
+
+  if (!guide) {
+    return (
+      <li className="flex gap-2">
+        <span className="mono text-amber-600 select-none">{index + 1}.</span>
+        <span>{step}</span>
+      </li>
+    );
+  }
+
+  const title = locale === "nl" ? guide.title_nl : guide.title_en;
+  const duration = locale === "nl" ? guide.duration_nl : guide.duration_en;
+  const cta = locale === "nl" ? "Open de handleiding" : "Open the guide";
+
+  return (
+    <li className="flex gap-2">
+      <span className="mono text-amber-600 select-none">{index + 1}.</span>
+      <a
+        href={handleidingHref(guide.slug)}
+        className="flex-1 flex items-start gap-3 -my-1 px-4 py-3 rounded-md border border-amber-200 bg-amber-50/50 hover:bg-amber-50 hover:border-amber-300 transition-colors group"
+      >
+        <BookOpen
+          className="w-4 h-4 text-amber-700 shrink-0 mt-0.5"
+          aria-hidden
+        />
+        <span className="flex-1 leading-snug">
+          <span className="block font-medium text-zinc-900">{title}</span>
+          <span className="block text-xs text-zinc-600 mt-0.5">
+            {duration} · {cta}{" "}
+            <span aria-hidden className="group-hover:translate-x-0.5 inline-block transition-transform">
+              →
+            </span>
+          </span>
+        </span>
+      </a>
+    </li>
   );
 }
